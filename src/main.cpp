@@ -1,15 +1,10 @@
-#include <iostream>
-#include "GLFW/glfw3.h"
+#include "Core/window.h"
+#include "Core/core.h"
 
 int main()
 {
-    GLFWwindow* window;
-    if (!glfwInit())
-        return -1;
-
-    std::cout << glfwGetVersionString() << std::endl;
-
-    glfwTerminate();
+    LOG_INFO("Info");
+    LOG_TRACE("Jakis trace");
 
     return 0;
 }
