@@ -14,7 +14,10 @@ namespace ningen {
 
     void KeyboardInput::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) const
     {
-        
+        if (action != GLFW_RELEASE && key == GLFW_KEY_ESCAPE) // TODO: To change
+        {
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        }
     }
 
 }
