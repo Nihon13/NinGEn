@@ -23,8 +23,8 @@ namespace ningen {
             Vec2& operator*=(const Vec2& other);
             Vec2& operator/=(const Vec2& other);
 
-            bool operator==(const Vec2& other);
-            bool operator!=(const Vec2& other);
+            bool operator==(const Vec2& other) const;
+            bool operator!=(const Vec2& other) const;
         
             friend std::ostream& operator<<(std::ostream& out, const Vec2& vec);
         private:

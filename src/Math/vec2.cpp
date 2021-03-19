@@ -8,7 +8,7 @@ namespace ningen {
         this->y = 0;
     }
 
-    Vec2::Vec2(float x, float y)
+    Vec2::Vec2(const float x, const float y)
     {
         this->x = x;
         this->y = y;
@@ -86,12 +86,12 @@ namespace ningen {
         return div(other);
     }
 
-    bool Vec2::operator==(const Vec2& other)
+    bool Vec2::operator==(const Vec2& other) const
     {
         return ( (this->x == other.x) && (this->y == other.y) );
     }
 
-    bool Vec2::operator!=(const Vec2& other)
+    bool Vec2::operator!=(const Vec2& other) const
     {
         return ( (this->x != other.x) && (this->y != other.y) );
     }
