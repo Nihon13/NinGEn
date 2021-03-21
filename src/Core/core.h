@@ -6,15 +6,25 @@
 #include "nhntxtcol.h"
 
 #ifdef DEBUG_MODE
-#define LOG_INFO(...) nhntxtcol::TextColor::WHT(__VA_ARGS__)
-#define LOG_TRACE(...) nhntxtcol::TextColor::GRN(__VA_ARGS__)
-#define LOG_WARN(...) nhntxtcol::TextColor::YLW(__VA_ARGS__)
-#define LOG_ERROR(...) nhntxtcol::TextColor::RED(__VA_ARGS__)
+
+    #define LOG_TIMER_ON nhntxtcol::TextColor::setTimerOn()
+    #define LOG_TIMER_OFF nhntxtcol::TextColor::setTimerOff()
+
+    #define LOG_INFO(...) nhntxtcol::TextColor::WHT(__VA_ARGS__)
+    #define LOG_TRACE(...) nhntxtcol::TextColor::GRN(__VA_ARGS__)
+    #define LOG_WARN(...) nhntxtcol::TextColor::YLW(__VA_ARGS__)
+    #define LOG_ERROR(...) nhntxtcol::TextColor::RED(__VA_ARGS__)
+
 #else
-#define LOG_INFO(...) ;
-#define LOG_TRACE(...) ;
-#define LOG_WARN(...) ;
-#define LOG_ERROR(...) ;
+
+    #define LOG_TIMER_ON ;
+    #define LOG_TIMER_OFF ;
+
+    #define LOG_INFO(...) ;
+    #define LOG_TRACE(...) ;
+    #define LOG_WARN(...) ;
+    #define LOG_ERROR(...) ;
+
 #endif
 
 #endif
