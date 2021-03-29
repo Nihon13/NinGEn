@@ -1,6 +1,7 @@
 #include "Core/core.h"
 #include "Core/window.h"
 #include "Graphics/shader.h"
+#include "Graphics/vbo.h"
 
 int main()
 {
@@ -19,15 +20,13 @@ int main()
          0.0f,  0.5f, 0.0f
     };
 
-    unsigned int vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), 0);
+    VBO vbo(vertices, 3 * 3, 3);
+    vbo.bind();
+    
+    glVertexAttribPointer(0, vbo.getComponentCount(), GL_FLOAT, GL_FALSE, 3*sizeof(float), 0);
     glEnableVertexAttribArray(0);
 
     shader.start();
-    glBindVertexArray(vbo);
 
     while (!window.windowShouldClose())
     {
