@@ -2,6 +2,7 @@
 #include "Core/window.h"
 #include "Graphics/shader.h"
 #include "Graphics/vbo.h"
+#include "Graphics/ibo.h"
 
 int main()
 {
@@ -17,12 +18,21 @@ int main()
     {
         -0.5f, -0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+         0.5f,  0.5f, 0.0f,
+        -0.5f,  0.5f, 0.0f
     };
 
-    VBO vbo(vertices, 3 * 3, 3);
+    unsigned int indices[] =
+    {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    VBO vbo(vertices, 4 * 3, 3);
     vbo.bind();
-    
+    IBO ibo(indices, 6);
+    ibo.bind();
+
     glVertexAttribPointer(0, vbo.getComponentCount(), GL_FLOAT, GL_FALSE, 3*sizeof(float), 0);
     glEnableVertexAttribArray(0);
 
@@ -31,7 +41,7 @@ int main()
     while (!window.windowShouldClose())
     {
         window.clearWindow();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         window.updateWindow();
     }
 
