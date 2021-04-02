@@ -8,7 +8,7 @@ namespace ningen {
     class IBO
     {
         private:
-            GLuint m_IboId;
+            GLuint m_IboID;
             GLuint m_Count;
         public:
             IBO(GLuint* data, GLuint count, int mode = GL_STATIC_DRAW);

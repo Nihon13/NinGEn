@@ -3,6 +3,7 @@
 #include "Graphics/shader.h"
 #include "Graphics/vbo.h"
 #include "Graphics/ibo.h"
+#include "Graphics/vao.h"
 
 int main()
 {
@@ -28,20 +29,23 @@ int main()
         2, 3, 0
     };
 
+    VAO vao;
     VBO vbo(vertices, 4 * 3, 3);
     vbo.bind();
     IBO ibo(indices, 6);
     ibo.bind();
-
-    glVertexAttribPointer(0, vbo.getComponentCount(), GL_FLOAT, GL_FALSE, 3*sizeof(float), 0);
-    glEnableVertexAttribArray(0);
+    vao.addVbo(&vbo, 0);
 
     shader.start();
 
     while (!window.windowShouldClose())
     {
         window.clearWindow();
+        vao.bind();
+        ibo.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        ibo.unbind();
+        vao.unbind();
         window.updateWindow();
     }
 

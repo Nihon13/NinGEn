@@ -8,7 +8,7 @@ namespace ningen {
     class VBO
     {
         private:
-            GLuint m_VboId;
+            GLuint m_VboID;
             GLuint m_ComponentCount;
         public:
             VBO(GLfloat* data, GLuint count, GLuint componentCount, int mode = GL_STATIC_DRAW);
