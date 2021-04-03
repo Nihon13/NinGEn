@@ -11,8 +11,8 @@ namespace ningen {
         const char* vertexData = vertexDataBuff.c_str();
         const char* fragmentData = fragmentDataBuff.c_str();
 
-        unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
         glShaderSource(vertexShader, 1, &vertexData, NULL);
         glShaderSource(fragmentShader, 1, &fragmentData, NULL);
@@ -31,8 +31,8 @@ namespace ningen {
         glLinkProgram(m_ShaderID);
         checkErrors(m_ShaderID, "Program");
         
-        glDeleteProgram(vertexShader);
-        glDeleteProgram(fragmentShader);
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
     }
 
     Shader::~Shader(void)
@@ -70,6 +70,11 @@ namespace ningen {
                 LOG_ERROR(type, "linking error!");
             }
         }
+    }
+
+    void Shader::setUniformMat4f(const char* name, const Mat4& matrix) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(m_ShaderID, name), 1, GL_FALSE, matrix.elements);
     }
 
 }

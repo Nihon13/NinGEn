@@ -4,6 +4,7 @@
 #include "Graphics/vbo.h"
 #include "Graphics/ibo.h"
 #include "Graphics/vao.h"
+#include "Math/math.h"
 
 int main()
 {
@@ -17,10 +18,10 @@ int main()
 
     float vertices[] = 
     {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.5f,  0.5f, 0.0f,
-        -0.5f,  0.5f, 0.0f
+        -30.5f, -30.5f, 0.0f,
+         30.5f, -30.5f, 0.0f,
+         30.5f,  30.5f, 0.0f,
+        -30.5f,  30.5f, 0.0f
     };
 
     unsigned int indices[] =
@@ -38,12 +39,18 @@ int main()
 
     shader.start();
 
+    Mat4 mvp = Mat4::orthographic(-100.0f, 100.0f, -100.0f, 100.0f, -1.0f, 1.0f);
+    Mat4 matrix = Mat4::translate(Vec3(30.0f, 20.0f, 0.0f));
+
+    shader.setUniformMat4f("projection_matrix", mvp);
+
     while (!window.windowShouldClose())
     {
         window.clearWindow();
         vao.bind();
         ibo.bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        shader.setUniformMat4f("model_matrix", matrix);
+        glDrawElements(GL_TRIANGLES, ibo.getCount(), GL_UNSIGNED_INT, nullptr);
         ibo.unbind();
         vao.unbind();
         window.updateWindow();

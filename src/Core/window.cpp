@@ -58,8 +58,13 @@ namespace ningen {
         glfwSetInputMode(m_Window, GLFW_STICKY_KEYS, GLFW_TRUE);
         glfwSetMouseButtonCallback(m_Window, mouse_button_callback);
         glfwSetScrollCallback(m_Window, scroll_callback);
-        glfwSetCursorPosCallback(m_Window, cursor_position_callback);        
+        glfwSetCursorPosCallback(m_Window, cursor_position_callback);
 
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageCallback(opengl_error_callback, nullptr);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+		
         glViewport(0, 0, m_Width, m_Height);
 
         return true;
@@ -121,6 +126,22 @@ namespace ningen {
     void Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
         MouseInput::getInstance().mouse_button_callback(window, button, action, mods);
+    }
+
+    void Window::opengl_error_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+	{
+        if (id == 131185 || id == 131218) return; // Annoying Nvidia driver messages
+
+        switch (severity)
+        {   
+            case GL_DEBUG_SEVERITY_NOTIFICATION:
+                LOG_WARN("OpenGL NOTIFICATION:", message);
+                break;
+
+            default:
+                LOG_ERROR("OpenGL ERROR:", message);
+                break;
+        }
     }
 
 }

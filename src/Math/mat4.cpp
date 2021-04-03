@@ -31,7 +31,7 @@ namespace ningen {
                 float sum = 0.0f;
                 for (int e = 0; e < 4; e++)
                 {
-                    sum += elements[e + row * 4] * other.elements[col + e * 4];
+                    sum += elements[col + e * 4] * other.elements[e + row * 4];
                 }
                 buffer[col + row * 4] = sum;
             }
@@ -59,10 +59,9 @@ namespace ningen {
         result.elements[2 + 2 * 4] = 2.0f / (near - far);
         result.elements[3 + 3 * 4] = 1.0f;
   
-        result.elements[3 + 0 * 4] = - (right + left) / (right - left);
-        result.elements[3 + 1 * 4] = - (top + bottom) / (top - bottom); 
-        result.elements[3 + 2 * 4] = - (far + near) / (far - near);
-        result.elements[3 + 3 * 4] = 1;
+        result.elements[0 + 3 * 4] = - (right + left) / (right - left);
+        result.elements[1 + 3 * 4] = - (top + bottom) / (top - bottom); 
+        result.elements[2 + 3 * 4] = - (far + near) / (far - near);
 
         return result;
     }
@@ -76,8 +75,8 @@ namespace ningen {
         result.elements[0 + 0 * 4] = a / aspect;
         result.elements[1 + 1 * 4] = a;
         result.elements[2 + 2 * 4] = - (far + near) / (far - near);
-        result.elements[3 + 2 * 4] = - (2.0f * far * near) / (far - near);
-        result.elements[2 + 3 * 4] = -1.0f;
+        result.elements[2 + 3 * 4] = - (2.0f * far * near) / (far - near);
+        result.elements[3 + 2 * 4] = -1.0f;
 
         return result;
     }
@@ -86,9 +85,9 @@ namespace ningen {
     {
         Mat4 result(1.0f);
 
-        result.elements[3 + 0 * 4] = translation.x;
-        result.elements[3 + 1 * 4] = translation.y;
-        result.elements[3 + 2 * 4] = translation.z;
+        result.elements[0 + 3 * 4] = translation.x;
+        result.elements[1 + 3 * 4] = translation.y;
+        result.elements[2 + 3 * 4] = translation.z;
 
         return result;
     }

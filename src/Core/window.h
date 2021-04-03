@@ -25,6 +25,7 @@ namespace ningen {
             static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
             static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
             static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+            static void opengl_error_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
         public:
             Window(const char* title = "NinGEn - Keep it simple!", int width = 1200, int height = 675);
             ~Window(void);

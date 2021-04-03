@@ -3,6 +3,7 @@
 
 #include "Core/core.h"
 #include "Utils/fileutils.h"
+#include "Math/math.h"
 #include "glad/glad.h"
 
 namespace ningen {
@@ -17,6 +18,7 @@ namespace ningen {
             ~Shader(void);
             void start(void) const;
             void stop(void) const;
+            void setUniformMat4f(const char* name, const Mat4& matrix) const;
     };
 
 }
