@@ -15,6 +15,7 @@ namespace ningen {
             ~IBO(void);
             void bind(void) const;
             void unbind(void) const;
+            
             inline GLuint getCount(void) const { return m_Count; }
     };
 

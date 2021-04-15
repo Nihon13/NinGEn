@@ -18,6 +18,7 @@ namespace ningen {
             ~Shader(void);
             void start(void) const;
             void stop(void) const;
+            void setUniform1i(const char* name, int value) const;
             void setUniformMat4f(const char* name, const Mat4& matrix) const;
     };
 

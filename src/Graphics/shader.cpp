@@ -59,7 +59,7 @@ namespace ningen {
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
             if (success == GL_FALSE)
             {
-                LOG_ERROR(type, "shader compilation error!");
+                LOG_ERROR(type, " shader compilation error!");
             }
         }
         else
@@ -67,9 +67,14 @@ namespace ningen {
             glGetProgramiv(shader, GL_LINK_STATUS, &success);
             if (success == GL_FALSE)
             {
-                LOG_ERROR(type, "linking error!");
+                LOG_ERROR(type, " linking error!");
             }
         }
+    }
+
+    void Shader::setUniform1i(const char* name, int value) const
+    {
+        glUniform1i(glGetUniformLocation(m_ShaderID, name), value);
     }
 
     void Shader::setUniformMat4f(const char* name, const Mat4& matrix) const

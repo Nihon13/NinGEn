@@ -5,7 +5,8 @@ file(GLOB_RECURSE SOURCE_FILES
 	${CMAKE_SOURCE_DIR}/src/*.c
     ${CMAKE_SOURCE_DIR}/src/*.cpp
     ${CMAKE_SOURCE_DIR}/include/glad/glad.c
-    ${CMAKE_SOURCE_DIR}/include/nhntxtcol.cpp)
+    ${CMAKE_SOURCE_DIR}/include/nhntxtcol.cpp
+    ${CMAKE_SOURCE_DIR}/include/stb/*.cpp)
 
 set(LIBS
     ${CMAKE_SOURCE_DIR}/include/GLFW/libglfw.so

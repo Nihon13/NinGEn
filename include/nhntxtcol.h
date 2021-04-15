@@ -19,7 +19,7 @@ namespace nhntxtcol {
             template<typename T, typename... Args>
             static void printfun(const T& value, const Args&... args)
             {
-                std::cout << value << " ";
+                std::cout << value;
                 printfun(args...);
             }
 
@@ -28,7 +28,7 @@ namespace nhntxtcol {
                 char buf[12];
                 std::time_t result = std::time(nullptr);
                 std::tm* now = std::localtime(&result);
-                strftime(buf, sizeof(buf), "[%H:%M:%S]", now);
+                strftime(buf, sizeof(buf), "[%H:%M:%S] ", now);
 
                 return buf;
             }

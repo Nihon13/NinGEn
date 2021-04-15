@@ -15,6 +15,7 @@ namespace ningen {
             ~VBO(void);
             void bind(void) const;
             void unbind(void) const;
+            
             inline GLuint getComponentCount(void) const { return m_ComponentCount; }
     };
 

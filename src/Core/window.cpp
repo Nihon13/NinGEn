@@ -105,7 +105,7 @@ namespace ningen {
         glViewport(0, 0, width, height);
         win->m_Width = width;
         win->m_Height = height;
-        LOG_TRACE("Window resizing:", win->m_Width, "x", win->m_Height);
+        LOG_TRACE("Window resizing: ", win->m_Width, " x ", win->m_Height);
     }
 
     void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -135,11 +135,11 @@ namespace ningen {
         switch (severity)
         {   
             case GL_DEBUG_SEVERITY_NOTIFICATION:
-                LOG_WARN("OpenGL NOTIFICATION:", message);
+                LOG_WARN("OpenGL NOTIFICATION: ", message);
                 break;
 
             default:
-                LOG_ERROR("OpenGL ERROR:", message);
+                LOG_ERROR("OpenGL ERROR: ", message);
                 break;
         }
     }

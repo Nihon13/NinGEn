@@ -18,6 +18,16 @@ namespace ningen {
         {
             glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
+
+        if (action == GLFW_PRESS && key == GLFW_KEY_F1)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+
+        if (action == GLFW_RELEASE && key == GLFW_KEY_F1)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
     }
 
 }

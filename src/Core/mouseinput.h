@@ -17,11 +17,12 @@ namespace ningen {
             void operator=(const MouseInput&) = delete;
         public:
             static MouseInput& getInstance(void);
-            float getX(void) const { return m_Xpos; }
-            float getY(void) const { return m_Ypos; }
             void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) const;
             void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) const;
             void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) const;
+
+            inline float getX(void) const { return m_Xpos; }
+            inline float getY(void) const { return m_Ypos; }
     };
 
 }
