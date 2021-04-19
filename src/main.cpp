@@ -6,6 +6,7 @@
 #include "Graphics/ibo.h"
 #include "Graphics/vao.h"
 #include "Graphics/texture.h"
+#include "Graphics/mesh.h"
 
 int main()
 {
@@ -41,17 +42,29 @@ int main()
         2, 3, 0
     };
 
-    VAO vao;
-    VBO vbo(vertices, 4 * 3, 3);
-    VBO vbo_uv(uv, 4 * 2, 2);
-    vbo.bind();
-    vbo_uv.bind();
-    IBO ibo(indices, 6);
-    ibo.bind();
-    vao.addVbo(&vbo, 0);
-    vao.addVbo(&vbo_uv, 1);
-    vbo.unbind();
-    vbo_uv.unbind();
+    std::vector<Vertex> verts;
+    std::vector<unsigned int> inds;
+
+    Vertex vert;
+
+    for (int i = 0, j = 0; i < sizeof(vertices)/sizeof(vertices[0]); i+=3, j+=2)
+    {
+        vert.position.x = vertices[i];
+        vert.position.y = vertices[i+1];
+        vert.position.z = vertices[i+2];
+
+        vert.uv.x = uv[j];
+        vert.uv.y = uv[j+1];
+
+        verts.push_back(vert);
+    }
+
+    for (int i = 0; i < sizeof(indices)/sizeof(indices[0]); i++)
+    {
+        inds.push_back(indices[i]);
+    }
+
+    Mesh mesh(verts, inds, tex1);
 
     shader.start();
     tex1.bind();
@@ -65,12 +78,8 @@ int main()
     while (!window.windowShouldClose())
     {
         window.clearWindow();
-        vao.bind();
-        ibo.bind();
         shader.setUniformMat4f("u_ModelMatrix", matrix);
-        glDrawElements(GL_TRIANGLES, ibo.getCount(), GL_UNSIGNED_INT, nullptr);
-        ibo.unbind();
-        vao.unbind();
+        mesh.draw();
         window.updateWindow();
     }
 
