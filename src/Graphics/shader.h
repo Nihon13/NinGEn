@@ -19,6 +19,8 @@ namespace ningen {
             void start(void) const;
             void stop(void) const;
             void setUniform1i(const char* name, int value) const;
+            void setUniform1f(const char* name, float value) const;
+            void setUniform3f(const char* name, const Vec3& vector3) const;
             void setUniformMat4f(const char* name, const Mat4& matrix) const;
     };
 

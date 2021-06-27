@@ -77,6 +77,16 @@ namespace ningen {
         glUniform1i(glGetUniformLocation(m_ShaderID, name), value);
     }
 
+    void Shader::setUniform1f(const char* name, float value) const
+    {
+        glUniform1f(glGetUniformLocation(m_ShaderID, name), value);
+    }
+
+    void Shader::setUniform3f(const char* name, const Vec3& vector3) const
+    {
+        glUniform3f(glGetUniformLocation(m_ShaderID, name), vector3.x, vector3.y, vector3.z);
+    }
+
     void Shader::setUniformMat4f(const char* name, const Mat4& matrix) const
     {
         glUniformMatrix4fv(glGetUniformLocation(m_ShaderID, name), 1, GL_FALSE, matrix.elements);

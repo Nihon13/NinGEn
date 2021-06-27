@@ -2,8 +2,8 @@
 
 namespace ningen {
 
-    Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Texture& texture)
-        : m_Vertices(vertices), m_Indices(indices), m_Texture(texture)
+    Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
+        : m_Vertices(vertices), m_Indices(indices)
     {
         init();
     }
@@ -39,7 +39,7 @@ namespace ningen {
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
         glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, binormal));
+        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitangent));
 
         glEnableVertexAttribArray(4);
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));

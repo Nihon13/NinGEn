@@ -26,6 +26,8 @@ namespace ningen {
             return false;
         }
 
+        glfwWindowHint(GLFW_SAMPLES, 4);
+
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
         if (m_Width > mode->width) m_Width = mode->width;
