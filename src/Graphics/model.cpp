@@ -74,6 +74,16 @@ namespace ningen {
             m_Meshes.push_back(new Mesh(verts, inds));
         }
 
+        size_t bonesCount;
+        file.read((char*)&bonesCount, sizeof(bonesCount));
+
+        m_Bones.reserve(bonesCount);
+
+        if (bonesCount > 0)
+        {
+            file.read((char*)&m_Bones[0], bonesCount * sizeof(Bone));
+        }
+
         file.close();
 
         return true;

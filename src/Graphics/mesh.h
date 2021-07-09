@@ -8,6 +8,8 @@
 #include "Graphics/ibo.h"
 #include <vector>
 
+#define MAX_BONE_INFLUENCE 3
+
 namespace ningen {
 
     struct Vertex
@@ -17,6 +19,8 @@ namespace ningen {
         Vec2 uv;
         Vec3 bitangent;
         Vec3 tangent;
+        int boneIDs[MAX_BONE_INFLUENCE];
+        float weights[MAX_BONE_INFLUENCE];
     };
 
     class Mesh

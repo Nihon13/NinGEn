@@ -22,7 +22,7 @@ int main()
 
     Texture tex1("../../NinGEnModelLoader/res/Sciana.png");
 
-    Model robot1("../../NinGEnModelLoader/res/Robot1.nhmf");
+    Model robot1("../../NinGEnModelLoader/res/Robot.nhmf");
     Model interior("../../NinGEnModelLoader/res/Interior.nhmf");
 
     shader.start();
@@ -52,7 +52,7 @@ int main()
         interior.getMesh(5).draw();
         interior.getMesh(6).draw();
 
-        model_matrix = Mat4::translate(Vec3(0.0f, 0.0f, -500.0f));
+        model_matrix = Mat4::translate(Vec3(0.0f, 0.0f, -500.0f)) * Mat4::scale(Vec3(0.25f, 0.25f, 0.25f));
         shader.setUniformMat4f("u_ModelMatrix", model_matrix);
         robot1.getMesh(0).draw();
         robot1.getMesh(1).draw();

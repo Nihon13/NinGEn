@@ -5,15 +5,22 @@
 #include "Graphics/texture.h"
 #include <fstream>
 
-#define NHMF_VERSION "0002"
+#define NHMF_VERSION "0003"
 
 namespace ningen {
+
+    struct Bone
+    {
+        int id;
+        Mat4 offsetMatrix;
+    };
 
     class Model
     {
         private:
             const char* m_Path;
             std::vector<Mesh*> m_Meshes;
+            std::vector<Bone> m_Bones;
             bool loadMeshes(void);
         public:
             Model(const char* path);
