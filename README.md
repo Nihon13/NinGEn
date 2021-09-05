@@ -16,5 +16,5 @@ NinGEn - Game Engine.
 ### Cloning the repository
 
 ```
-git clone https://github.com/Nihon13/NinGEn.git
+git clone --recursive https://github.com/Nihon13/NinGEn.git
 ```

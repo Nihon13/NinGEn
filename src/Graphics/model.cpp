@@ -11,7 +11,7 @@ namespace ningen {
         }
         else
         {
-            LOG_INFO("Loaded model: ", m_Path);
+            LOG_INFO("Loaded model: [", m_Path, "]");
         }
     }
 
@@ -29,7 +29,7 @@ namespace ningen {
 
         if (!file)
         {
-            LOG_ERROR("Failed to load a model!");
+            LOG_ERROR("Failed to load a model! [", m_Path, "]");
             return false;
         }
 
@@ -48,7 +48,7 @@ namespace ningen {
 
         if (strcmp(NHMF_VERSION, version) != 0)
         {
-            LOG_ERROR("Wrong file format version!");
+            LOG_ERROR("Wrong file format version! [", m_Path, "]");
             exit(EXIT_FAILURE);    
         }
 

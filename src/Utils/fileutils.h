@@ -15,7 +15,7 @@ namespace ningen {
             exit(1);
         }
         
-        LOG_INFO("Opening file: ", filepath);
+        LOG_INFO("Opening file: [", filepath, "]");
 
         fseek(file, 0, SEEK_END);
         unsigned long length = ftell(file);

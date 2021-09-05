@@ -25,11 +25,11 @@ namespace ningen {
 
         if (m_Data == NULL)
         {
-            LOG_ERROR("Failed to load texture: ", path);
+            LOG_ERROR("Failed to load texture: [", path, "]");
         }
         else
         {
-            LOG_INFO("Texture loaded: ", path);
+            LOG_INFO("Texture loaded: [", path, "]");
         }
         
         stbi_image_free(m_Data); 
