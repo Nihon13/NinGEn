@@ -11,7 +11,7 @@ namespace ningen {
         FILE* file = fopen(filepath, "rt");
         if (file == NULL)
         {
-            LOG_ERROR("Failed to open a file!");
+            LOG_ERROR("Failed to open a file! [", filepath, "]");
             exit(1);
         }
         
