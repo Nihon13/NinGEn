@@ -29,11 +29,14 @@ int main()
     tex1.bind(0);
 
     // Mat4 projection_matrix = Mat4::orthographic(-100.0f, 100.0f, -100.0f, 100.0f, -1.0f, 1.0f);
-    Mat4 projection_matrix = Mat4::perspective(45.0f, 16.0f/9.0f, 0.1f, 300.0f);
-    Mat4 view_matrix = Mat4::identity();    
-    Mat4 model_matrix = Mat4::identity();
+    Mat4 projection_matrix = glm::perspective(glm::radians(45.0f), 16.0f/9.0f, 0.1f, 300.0f);
+    Mat4 view_matrix = Mat4(1.0f);    
+    Mat4 model_matrix = Mat4(1.0f);
 
-    view_matrix = Mat4::translate(Vec3(0.0f, -4.0f, -120.0f)) * Mat4::rotate(30.0f, Vec3(1.0f, 0.0f, 0.0f)) * Mat4::rotate(190.0f, Vec3(0.0f, 1.0f, 0.0f)) * Mat4::scale(Vec3(0.045f, 0.045f, 0.045f));
+    view_matrix = glm::translate(view_matrix, Vec3(0.0f, -4.0f, -120.0f));
+    view_matrix = glm::rotate(view_matrix, glm::radians(30.0f), Vec3(1.0f, 0.0f, 0.0f));
+    view_matrix = glm::rotate(view_matrix, glm::radians(190.0f), Vec3(0.0f, 1.0f, 0.0f));
+    view_matrix = glm::scale(view_matrix, Vec3(0.045f, 0.045f, 0.045f));
 
     shader.setUniformMat4f("u_ProjectionMatrix", projection_matrix);
     shader.setUniformMat4f("u_ViewMatrix", view_matrix);
@@ -42,7 +45,7 @@ int main()
     {
         window.clearWindow();
 
-        model_matrix = Mat4::identity();
+        model_matrix = Mat4(1.0f);
         shader.setUniformMat4f("u_ModelMatrix", model_matrix);
         interior.getMesh(0).draw();
         interior.getMesh(1).draw();
@@ -52,7 +55,8 @@ int main()
         interior.getMesh(5).draw();
         interior.getMesh(6).draw();
 
-        model_matrix = Mat4::translate(Vec3(0.0f, 0.0f, -500.0f)) * Mat4::scale(Vec3(0.25f, 0.25f, 0.25f));
+        model_matrix = glm::translate(model_matrix, Vec3(0.0f, 0.0f, -500.0f));
+        model_matrix = glm::scale(model_matrix, Vec3(0.25f, 0.25f, 0.25f));
         shader.setUniformMat4f("u_ModelMatrix", model_matrix);
         robot1.getMesh(0).draw();
         robot1.getMesh(1).draw();

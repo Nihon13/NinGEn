@@ -89,7 +89,7 @@ namespace ningen {
 
     void Shader::setUniformMat4f(const char* name, const Mat4& matrix) const
     {
-        glUniformMatrix4fv(glGetUniformLocation(m_ShaderID, name), 1, GL_FALSE, matrix.elements);
+        glUniformMatrix4fv(glGetUniformLocation(m_ShaderID, name), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
 }
