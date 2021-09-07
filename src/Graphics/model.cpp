@@ -40,7 +40,7 @@ namespace ningen {
         char* header = new char[headerSize];
         file.read(header, headerSize);
 
-        delete header;
+        delete [] header;
 
         file.read((char*)&versionSize, sizeof(versionSize));
         char* version = new char[versionSize];
@@ -52,7 +52,7 @@ namespace ningen {
             exit(EXIT_FAILURE);    
         }
 
-        delete version;
+        delete [] version;
 
         size_t meshesCount;
         file.read((char*)&meshesCount, sizeof(meshesCount));
@@ -77,11 +77,22 @@ namespace ningen {
         size_t bonesCount;
         file.read((char*)&bonesCount, sizeof(bonesCount));
 
-        m_Bones.reserve(bonesCount);
-
-        if (bonesCount > 0)
+        for (int i = 0; i < bonesCount; i++)
         {
-            file.read((char*)&m_Bones[0], bonesCount * sizeof(Bone));
+            Bone bone;
+            size_t size;
+            char* buff = new char[size];
+
+            file.read((char*)&bone.id, sizeof(((Bone*)0)->id));
+            file.read((char*)&size, sizeof(size));
+            file.read(buff, size);
+            bone.name = buff;
+            delete [] buff;
+            file.read((char*)&bone.offsetMatrix, sizeof(((Bone*)0)->offsetMatrix));
+            file.read((char*)&bone.transformMatrix, sizeof(((Bone*)0)->transformMatrix));
+            file.read((char*)&bone.parentBoneID, sizeof(((Bone*)0)->parentBoneID));
+
+            m_Bones.push_back(bone);            
         }
 
         file.close();

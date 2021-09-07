@@ -5,14 +5,17 @@
 #include "Graphics/texture.h"
 #include <fstream>
 
-#define NHMF_VERSION "0003"
+#define NHMF_VERSION "0004"
 
 namespace ningen {
 
     struct Bone
     {
         int id;
+        std::string name;
         Mat4 offsetMatrix;
+        Mat4 transformMatrix;
+        int parentBoneID;
     };
 
     class Model
