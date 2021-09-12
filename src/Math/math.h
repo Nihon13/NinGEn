@@ -11,6 +11,7 @@ namespace ningen {
     #define Vec3 glm::vec3
     #define Vec4 glm::vec4
     #define Mat4 glm::mat4
+    #define Quaternion glm::quat
 
 }
 

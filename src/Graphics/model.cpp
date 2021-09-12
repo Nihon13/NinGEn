@@ -77,22 +77,95 @@ namespace ningen {
         size_t bonesCount;
         file.read((char*)&bonesCount, sizeof(bonesCount));
 
-        for (int i = 0; i < bonesCount; i++)
+        if (bonesCount > 0)
         {
-            Bone bone;
-            size_t size;
-            char* buff = new char[size];
+            SkeletalAnimation skeleAnimation;
 
-            file.read((char*)&bone.id, sizeof(((Bone*)0)->id));
-            file.read((char*)&size, sizeof(size));
-            file.read(buff, size);
-            bone.name = buff;
-            delete [] buff;
-            file.read((char*)&bone.offsetMatrix, sizeof(((Bone*)0)->offsetMatrix));
-            file.read((char*)&bone.transformMatrix, sizeof(((Bone*)0)->transformMatrix));
-            file.read((char*)&bone.parentBoneID, sizeof(((Bone*)0)->parentBoneID));
+            for (int i = 0; i < bonesCount; i++)
+            {
+                Bone bone;
+                size_t size;
 
-            m_Bones.push_back(bone);            
+                file.read((char*)&bone.id, sizeof(((Bone*)0)->id));
+                file.read((char*)&size, sizeof(size));
+                char* buff = new char[size];
+                file.read(buff, size);
+                bone.name = buff;
+                delete [] buff;
+                file.read((char*)&bone.offsetMatrix, sizeof(((Bone*)0)->offsetMatrix));
+                file.read((char*)&bone.transformMatrix, sizeof(((Bone*)0)->transformMatrix));
+                file.read((char*)&bone.parentBoneID, sizeof(((Bone*)0)->parentBoneID));
+
+                skeleAnimation.m_Bones.push_back(bone);
+            }
+
+            size_t animationsCount;
+            file.read((char*)&animationsCount, sizeof(animationsCount));
+    
+            for (int i = 0; i < animationsCount; i++)
+            {
+                Animation animation;
+                size_t size;
+
+                file.read((char*)&size, sizeof(size));
+                char* buff = new char[size];
+                file.read(buff, size);
+                animation.name = buff;
+                delete [] buff;
+                file.read((char*)&animation.duration, sizeof(((Animation*)0)->duration));
+                file.read((char*)&animation.ticksPerSecond, sizeof(((Animation*)0)->ticksPerSecond));
+
+                size_t numChannels;
+                file.read((char*)&numChannels, sizeof(numChannels));
+
+                for (int j = 0; j < numChannels; j++)
+                {
+                    AnimNode node;
+
+                    file.read((char*)&node.id, sizeof(((AnimNode*)0)->id));
+                    size_t size;
+                    file.read((char*)&size, sizeof(size));
+                    char* buff = new char[size];
+                    file.read(buff, size);
+                    node.name = buff;
+                    delete [] buff;
+
+                    size_t numPosKeys;
+                    size_t numRotKeys;
+                    size_t numScaleKeys;
+                    
+                    file.read((char*)&numPosKeys, sizeof(numPosKeys));
+                    file.read((char*)&numRotKeys, sizeof(numRotKeys));
+                    file.read((char*)&numScaleKeys, sizeof(numScaleKeys));
+                                        
+                    for (int k = 0; k < numPosKeys; k++)
+                    {
+                        KeyPos kp;
+                        file.read((char*)&kp, sizeof(KeyPos));
+                        node.positionsKeys.push_back(kp);
+                    }
+
+                    for (int k = 0; k < numRotKeys; k++)
+                    {
+                        KeyRot kr;
+                        file.read((char*)&kr, sizeof(KeyRot));
+                        node.rotationsKeys.push_back(kr);
+                    }
+
+                    for (int k = 0; k < numScaleKeys; k++)
+                    {
+                        KeyScale ks;
+                        file.read((char*)&ks, sizeof(KeyScale));
+                        node.scalingsKeys.push_back(ks);
+                    }
+
+                    animation.channels.push_back(node);
+                }
+
+                skeleAnimation.m_Animations.push_back(animation);
+            }
+
+            m_Animations.push_back(skeleAnimation);
         }
 
         file.close();
