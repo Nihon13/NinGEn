@@ -79,8 +79,6 @@ namespace ningen {
 
         if (bonesCount > 0)
         {
-            SkeletalAnimation skeleAnimation;
-
             for (int i = 0; i < bonesCount; i++)
             {
                 Bone bone;
@@ -96,7 +94,7 @@ namespace ningen {
                 file.read((char*)&bone.transformMatrix, sizeof(((Bone*)0)->transformMatrix));
                 file.read((char*)&bone.parentBoneID, sizeof(((Bone*)0)->parentBoneID));
 
-                skeleAnimation.m_Bones.push_back(bone);
+                m_SkeleAnimManager.m_Bones.push_back(bone);
             }
 
             size_t animationsCount;
@@ -162,10 +160,8 @@ namespace ningen {
                     animation.channels.push_back(node);
                 }
 
-                skeleAnimation.m_Animations.push_back(animation);
+                m_SkeleAnimManager.m_Animations.push_back(animation);
             }
-
-            m_Animations.push_back(skeleAnimation);
         }
 
         file.close();

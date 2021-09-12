@@ -3,7 +3,7 @@
 
 #include "Graphics/mesh.h"
 #include "Graphics/texture.h"
-#include "Graphics/skeletalanimation.h"
+#include "Graphics/skeletalanimationmanager.h"
 #include <fstream>
 
 #define NHMF_VERSION "0005"
@@ -15,14 +15,14 @@ namespace ningen {
         private:
             const char* m_Path;
             std::vector<Mesh*> m_Meshes;
-            std::vector<SkeletalAnimation> m_Animations;
+            SkeletalAnimationManager m_SkeleAnimManager;
             bool loadMeshes(void);
         public:
             Model(const char* path);
             ~Model(void);
             
             const Mesh& getMesh(unsigned int index) const { return *m_Meshes[index]; }
-            // const SkeletalAnimation& getAnim(unsigned int index) const { return m_Animations[index]; }
+            const SkeletalAnimationManager& getAnimManager(void) const { return m_SkeleAnimManager; }
     };
 
 }

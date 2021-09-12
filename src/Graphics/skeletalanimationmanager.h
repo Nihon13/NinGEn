@@ -1,5 +1,5 @@
-#ifndef SKELETALANIMATION_H
-#define SKELETALANIMATION_H
+#ifndef SKELETALANIMATIONMANAGER_H
+#define SKELETALANIMATIONMANAGER_H
 
 #include "Math/math.h"
 #include <string>
@@ -51,10 +51,8 @@ namespace ningen {
         std::vector<AnimNode> channels;
     };
 
-    class SkeletalAnimation
+    class SkeletalAnimationManager
     {
-        public:
-
         private:
             std::vector<Bone> m_Bones;
             std::vector<Animation> m_Animations;
