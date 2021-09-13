@@ -53,9 +53,14 @@ namespace ningen {
 
     class SkeletalAnimationManager
     {
+        public:
+            std::vector<Mat4>& getFinalBonesMatrices(void) { return m_FinalBonesMatrices; }
+            int getBonesCount(void) const { return m_BonesCount; }
         private:
             std::vector<Bone> m_Bones;
             std::vector<Animation> m_Animations;
+            std::vector<Mat4> m_FinalBonesMatrices;
+            int m_BonesCount;
             friend class Model;
     };
 

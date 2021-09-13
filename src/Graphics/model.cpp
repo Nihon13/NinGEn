@@ -76,11 +76,14 @@ namespace ningen {
 
         size_t bonesCount;
         file.read((char*)&bonesCount, sizeof(bonesCount));
+        m_SkeleAnimManager.m_BonesCount = bonesCount;
 
         if (bonesCount > 0)
         {
             for (int i = 0; i < bonesCount; i++)
             {
+                m_SkeleAnimManager.m_FinalBonesMatrices.push_back(Mat4(1.0f));
+
                 Bone bone;
                 size_t size;
 
