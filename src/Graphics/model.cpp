@@ -124,12 +124,6 @@ namespace ningen {
                     AnimNode node;
 
                     file.read((char*)&node.id, sizeof(((AnimNode*)0)->id));
-                    size_t size;
-                    file.read((char*)&size, sizeof(size));
-                    char* buff = new char[size];
-                    file.read(buff, size);
-                    node.name = buff;
-                    delete [] buff;
 
                     size_t numPosKeys;
                     size_t numRotKeys;

@@ -37,7 +37,6 @@ namespace ningen {
     struct AnimNode
     {
         int id;
-        std::string name;
         std::vector<KeyPos> positionsKeys;
         std::vector<KeyRot> rotationsKeys;
         std::vector<KeyScale> scalingsKeys;
