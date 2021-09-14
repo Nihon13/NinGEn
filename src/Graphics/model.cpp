@@ -132,6 +132,10 @@ namespace ningen {
                     file.read((char*)&numPosKeys, sizeof(numPosKeys));
                     file.read((char*)&numRotKeys, sizeof(numRotKeys));
                     file.read((char*)&numScaleKeys, sizeof(numScaleKeys));
+
+                    node.numPosKeys = numPosKeys;
+                    node.numRotKeys = numRotKeys;
+                    node.numScaleKeys = numScaleKeys;
                                         
                     for (int k = 0; k < numPosKeys; k++)
                     {

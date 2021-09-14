@@ -40,6 +40,9 @@ namespace ningen {
         std::vector<KeyPos> positionsKeys;
         std::vector<KeyRot> rotationsKeys;
         std::vector<KeyScale> scalingsKeys;
+        int numPosKeys;
+        int numRotKeys;
+        int numScaleKeys;
     };
 
     struct Animation
