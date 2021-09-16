@@ -8,6 +8,8 @@
 #include "Graphics/texture.h"
 #include "Graphics/model.h"
 
+#include "Graphics/writer.h"
+
 int main()
 {
     using namespace ningen;
@@ -22,7 +24,8 @@ int main()
 
     Texture tex1("../../NinGEnModelLoader/res/Sciana.png");
 
-    Model robot1("../../NinGEnModelLoader/res/TestV5/Robot.nhmf");
+    // writeToFile("../../NinGEnModelLoader/res/TestV6/Robot.fbx");
+    Model robot1("../../NinGEnModelLoader/res/TestV6/Robot.nhmf");
 
     // Model interior("../../NinGEnModelLoader/res/Interior.nhmf");
 
