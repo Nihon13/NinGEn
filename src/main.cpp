@@ -22,8 +22,9 @@ int main()
 
     Texture tex1("../../NinGEnModelLoader/res/Sciana.png");
 
-    Model robot1("../../NinGEnModelLoader/res/Robot.nhmf");
-    Model interior("../../NinGEnModelLoader/res/Interior.nhmf");
+    Model robot1("../../NinGEnModelLoader/res/TestV5/Robot.nhmf");
+
+    // Model interior("../../NinGEnModelLoader/res/Interior.nhmf");
 
     shader.start();
     tex1.bind(0);
@@ -33,7 +34,7 @@ int main()
     Mat4 view_matrix = Mat4(1.0f);    
     Mat4 model_matrix = Mat4(1.0f);
 
-    view_matrix = glm::translate(view_matrix, Vec3(0.0f, -4.0f, -120.0f));
+    view_matrix = glm::translate(view_matrix, Vec3(0.0f, 0.0f, -85.0f));
     view_matrix = glm::rotate(view_matrix, glm::radians(30.0f), Vec3(1.0f, 0.0f, 0.0f));
     view_matrix = glm::rotate(view_matrix, glm::radians(190.0f), Vec3(0.0f, 1.0f, 0.0f));
     view_matrix = glm::scale(view_matrix, Vec3(0.045f, 0.045f, 0.045f));
@@ -46,14 +47,21 @@ int main()
         window.clearWindow();
 
         model_matrix = Mat4(1.0f);
-        shader.setUniformMat4f("u_ModelMatrix", model_matrix);
-        interior.getMesh(0).draw();
-        interior.getMesh(1).draw();
-        interior.getMesh(2).draw();
-        interior.getMesh(3).draw();
-        interior.getMesh(4).draw();
-        interior.getMesh(5).draw();
-        interior.getMesh(6).draw();
+        // shader.setUniformMat4f("u_ModelMatrix", model_matrix);
+        // interior.getMesh(0).draw();
+        // interior.getMesh(1).draw();
+        // interior.getMesh(2).draw();
+        // interior.getMesh(3).draw();
+        // interior.getMesh(4).draw();
+        // interior.getMesh(5).draw();
+        // interior.getMesh(6).draw();
+
+        auto transforms = robot1.getAnimManager().getFinalBonesMatrices();
+        for (int i = 0; i < robot1.getAnimManager().getBonesCount(); i++)
+        {
+            std::string s = "u_FinalBonesMatrices[" + std::to_string(i) + "]";
+            shader.setUniformMat4f(s.c_str(), transforms[i]);
+        }
 
         model_matrix = glm::translate(model_matrix, Vec3(0.0f, 0.0f, -500.0f));
         model_matrix = glm::scale(model_matrix, Vec3(0.25f, 0.25f, 0.25f));

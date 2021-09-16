@@ -22,7 +22,7 @@ namespace ningen {
             ~Model(void);
             
             const Mesh& getMesh(unsigned int index) const { return *m_Meshes[index]; }
-            const SkeletalAnimationManager& getAnimManager(void) const { return m_SkeleAnimManager; }
+            SkeletalAnimationManager& getAnimManager(void) { return m_SkeleAnimManager; }
     };
 
 }

@@ -11,6 +11,7 @@ file(GLOB_RECURSE SOURCE_FILES
 
 set(LIBS
     ${CMAKE_SOURCE_DIR}/include/GLFW/libglfw.so
+    ${CMAKE_SOURCE_DIR}/include/assimp/libassimp.so
     GL
     dl
     m
