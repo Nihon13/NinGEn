@@ -1,5 +1,7 @@
 #include "reader.h"
 
+using namespace ningen;
+
 Reader::Reader(const char* path)
     : m_Path(path)
 {
@@ -39,7 +41,7 @@ bool Reader::init(void)
         bone.id = iter->second.id;
         bone.name = iter->first;
         bone.offsetMatrix = iter->second.offsetMatrix;
-        bone.offsetMatrix.Transpose();
+        // bone.offsetMatrix.Transpose();
         bone.parentBoneID = -1;
 
         m_Bones.push_back(bone);
@@ -50,10 +52,11 @@ bool Reader::init(void)
     for (int i = 0; i < m_Bones.size(); i++)
     {      
         m_Bones[i].parentBoneID = findParentBone(m_Bones[i]);
-        m_Bones[i].transformMatrix = m_Scene->mRootNode->FindNode(m_Bones[i].name.c_str())->mTransformation;
-        aiMatrix4x4 mat = m_Bones[i].transformMatrix;
-        LOG_TRACE("mat4x4((", mat.a1, ", ", mat.a2, ", ", mat.a3, ", ", mat.a4, "), (", mat.b1, ", ", mat.b2, ", ", mat.b3, ", ", mat.b4, "), (", mat.c1, ", ", mat.c2, ", ", mat.c3, ", ", mat.c4, "), (", mat.d1, ", ", mat.d2, ", ", mat.d3, ", ", mat.d4, "))");
-        m_Bones[i].transformMatrix.Transpose();
+        m_Bones[i].transformMatrix = AssimpToGLM(m_Scene->mRootNode->FindNode(m_Bones[i].name.c_str())->mTransformation);
+        // aiMatrix4x4 mat = m_Bones[i].transformMatrix;
+        // LOG_TRACE(glm::to_string(m_Bones[i].transformMatrix)); 
+        // LOG_TRACE("mat4x4((", mat.a1, ", ", mat.a2, ", ", mat.a3, ", ", mat.a4, "), (", mat.b1, ", ", mat.b2, ", ", mat.b3, ", ", mat.b4, "), (", mat.c1, ", ", mat.c2, ", ", mat.c3, ", ", mat.c4, "), (", mat.d1, ", ", mat.d2, ", ", mat.d3, ", ", mat.d4, "))");
+        // m_Bones[i].transformMatrix.Transpose();
     }
 
     m_NumAnimations = m_Scene->mNumAnimations;
@@ -161,7 +164,9 @@ void Reader::addBoneToList(const aiBone* bone)
     if (m_BonesMap.find(boneName) == m_BonesMap.end())
     {
         m_BonesMap[boneName].id = m_BoneCounter;
-        m_BonesMap[boneName].offsetMatrix = bone->mOffsetMatrix;
+        matToString(bone->mOffsetMatrix);
+        m_BonesMap[boneName].offsetMatrix = AssimpToGLM(bone->mOffsetMatrix);
+        // LOG_TRACE("Macierz: ", glm::to_string(m_BonesMap[boneName].offsetMatrix));
         m_BoneCounter++;
     }
 }

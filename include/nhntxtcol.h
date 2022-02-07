@@ -19,7 +19,7 @@ namespace nhntxtcol {
             template<typename T, typename... Args>
             static void printfun(const T& value, const Args&... args)
             {
-                std::cout << value;
+                std::cout << std::fixed << value;
                 printfun(args...);
             }
 

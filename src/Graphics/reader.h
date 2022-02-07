@@ -8,6 +8,7 @@
 #include <map>
 #include <algorithm>
 #include "nhntxtcol.h"
+#include <Math/math.h>
 
 #define LOG_INFO(...) nhntxtcol::TextColor::WHT(__VA_ARGS__)
 #define LOG_TRACE(...) nhntxtcol::TextColor::GRN(__VA_ARGS__)
@@ -31,8 +32,8 @@ struct Bone
 {
     int id;
     std::string name;
-    aiMatrix4x4 offsetMatrix;
-    aiMatrix4x4 transformMatrix;
+    Mat4 offsetMatrix;
+    Mat4 transformMatrix;
     int parentBoneID;
 
     bool operator<(const Bone& a) const
@@ -105,6 +106,22 @@ class Reader
         inline unsigned int getNumAnimations(void) const { return m_NumAnimations; }
         inline unsigned int getVerticesTotalCount(void) const { return m_VerticesTotalCount; }
         inline unsigned int getIndicesTotalCount(void) const { return m_IndicesTotalCount; }
+
+        static Mat4 AssimpToGLM(const aiMatrix4x4 &matrix)
+        {
+            return Mat4(
+                matrix[0][0], matrix[1][0], matrix[2][0], matrix[3][0],
+                matrix[0][1], matrix[1][1], matrix[2][1], matrix[3][1],
+                matrix[0][2], matrix[1][2], matrix[2][2], matrix[3][2],
+                matrix[0][3], matrix[1][3], matrix[2][3], matrix[3][3]
+            );
+        }
+
+        void matToString(aiMatrix4x4 mat)
+        {
+            LOG_TRACE("mat4x4((", mat.a1, ", ", mat.a2, ", ", mat.a3, ", ", mat.a4, "), (", mat.b1, ", ", mat.b2, ", ", mat.b3, ", ", mat.b4, "), (", mat.c1, ", ", mat.c2, ", ", mat.c3, ", ", mat.c4, "), (", mat.d1, ", ", mat.d2, ", ", mat.d3, ", ", mat.d4, "))");
+        }
+
 };
 
 #endif
