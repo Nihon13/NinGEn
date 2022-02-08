@@ -17,8 +17,10 @@ namespace ningen {
             std::vector<Mesh*> m_Meshes;
             const aiScene* m_Scene;
             unsigned int m_NumMeshes = 0;
+            std::vector<std::vector<Vertex>> m_Vertices;
+            std::vector<std::vector<unsigned int>> m_Indices;
             bool initAssimp(void);
-            void processMesh(const aiMesh* mesh);
+            void extractMeshData(const aiMesh* mesh);
         public:
             TempModel(const char* path);
             ~TempModel(void);
