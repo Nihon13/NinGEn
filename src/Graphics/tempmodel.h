@@ -25,6 +25,8 @@ namespace ningen {
             TempModel(const char* path);
             ~TempModel(void);
             const Mesh& getMesh(unsigned int index) const { return *m_Meshes[index]; }
+
+            inline unsigned int getNumMeshes(void) const { return m_NumMeshes; }
     };
 
 }

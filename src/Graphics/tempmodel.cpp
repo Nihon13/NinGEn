@@ -26,7 +26,7 @@ namespace ningen {
     bool TempModel::initAssimp(void)
     {
         Assimp::Importer importer;
-        m_Scene = importer.ReadFile(m_Path, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
+        m_Scene = importer.ReadFile(m_Path, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
         if (!m_Scene)
         {
@@ -39,6 +39,7 @@ namespace ningen {
         for (unsigned int i = 0; i < m_NumMeshes; i++)
         {
             extractMeshData(m_Scene->mMeshes[i]);
+            m_Meshes.push_back(new Mesh(m_Vertices[i], m_Indices[i]));
         }
 
         return true;

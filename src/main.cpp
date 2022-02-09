@@ -32,7 +32,8 @@ int main()
     // Model testBox("../../NinGEnModelLoader/res/TestV6/RigTestBox.nhmf");
     // Model jointDebug("../../NinGEnModelLoader/res/TestV6/JointDebug2.nhmf");
 
-    TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/Robot.fbx");
+    // TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/Robot.fbx");
+    TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/boblampclean.md5mesh");
 
     shader.start();
     tex1.bind(0);
@@ -42,9 +43,9 @@ int main()
     Mat4 view_matrix = Mat4(1.0f);    
     Mat4 model_matrix = Mat4(1.0f);
 
-    view_matrix = glm::translate(view_matrix, Vec3(0.0f, -1.0f, -4.0f));
-    view_matrix = glm::rotate(view_matrix, glm::radians(10.0f), Vec3(1.0f, 0.0f, 0.0f));
-    view_matrix = glm::rotate(view_matrix, glm::radians(10.0f), Vec3(0.0f, 1.0f, 0.0f));
+    view_matrix = glm::translate(view_matrix, Vec3(0.0f, 0.0f, -70.0f));
+    // view_matrix = glm::rotate(view_matrix, glm::radians(-90.0f), Vec3(1.0f, 0.0f, 0.0f));
+    // view_matrix = glm::rotate(view_matrix, glm::radians(10.0f), Vec3(0.0f, 1.0f, 0.0f));
 
     shader.setUniformMat4f("u_ProjectionMatrix", projection_matrix);
     shader.setUniformMat4f("u_ViewMatrix", view_matrix);
@@ -65,7 +66,10 @@ int main()
 
         shader.setUniformMat4f("u_ModelMatrix", model_matrix);
 
-        // robotTestModel.getMesh(0).draw();
+        for (unsigned int i = 0; i < robotTestModel.getNumMeshes(); i++)
+        {
+            robotTestModel.getMesh(i).draw();
+        }
 
         window.updateWindow();
     }
