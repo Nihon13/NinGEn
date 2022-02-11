@@ -32,8 +32,8 @@ int main()
     // Model testBox("../../NinGEnModelLoader/res/TestV6/RigTestBox.nhmf");
     // Model jointDebug("../../NinGEnModelLoader/res/TestV6/JointDebug2.nhmf");
 
-    // TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/Robot.fbx");
-    TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/boblampclean.md5mesh");
+    TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/Robot.fbx");
+    // TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/boblampclean.md5mesh");
 
     shader.start();
     tex1.bind(0);
@@ -50,6 +50,8 @@ int main()
     shader.setUniformMat4f("u_ProjectionMatrix", projection_matrix);
     shader.setUniformMat4f("u_ViewMatrix", view_matrix);
 
+    int displayBone = 0;
+
     while (!window.windowShouldClose())
     {
         window.clearWindow();
@@ -63,6 +65,15 @@ int main()
         //     std::string s = "u_FinalBonesMatrices[" + std::to_string(i) + "]";
         //     shader.setUniformMat4f(s.c_str(), transforms[i]);
         // }
+    
+        displayBone = (int)glfwGetTime() % 6;
+        
+        if (displayBone > 5)
+        {
+            displayBone = 0;
+        }
+
+        shader.setUniform1i("gDisplayBoneIndex", displayBone);
 
         shader.setUniformMat4f("u_ModelMatrix", model_matrix);
 

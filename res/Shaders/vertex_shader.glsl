@@ -21,8 +21,20 @@ out vec3 v_Pos;
 out vec3 v_Normal;
 out vec2 v_TexCoord;
 
+flat out ivec3 v_BoneIDs;
+out vec3 v_Weights;
+
 void main()
 {
+    // mat4 BoneTransform = u_FinalBonesMatrices[a_BoneIDs[0]] * a_Weights[0];
+    // BoneTransform += u_FinalBonesMatrices[a_BoneIDs[1]] * a_Weights[1];
+    // BoneTransform += u_FinalBonesMatrices[a_BoneIDs[2]] * a_Weights[2];
+
+    // vec4 PosL = BoneTransform * vec4(a_Pos, 1.0f);
+    // gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * PosL;
+
+
+
     vec4 totalLocalPos = vec4(0.0f);
 
     for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
@@ -42,4 +54,7 @@ void main()
     v_Pos = vec3(u_ModelMatrix * vec4(a_Pos, 1.0));
     v_Normal = mat3(u_ModelMatrix) * a_Normal;
     v_TexCoord = a_TexCoord;
+
+    v_BoneIDs = a_BoneIDs;
+    v_Weights = a_Weights;
 }

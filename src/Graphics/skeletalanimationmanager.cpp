@@ -1,5 +1,5 @@
-#include "skeletalanimationmanager.h"
+// #include "skeletalanimationmanager.h"
 
-namespace ningen {
+// namespace ningen {
 
-}
+// }
