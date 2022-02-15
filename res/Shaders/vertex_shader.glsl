@@ -48,8 +48,8 @@ void main()
         totalLocalPos += localPos * a_Weights[i];
     }
 
-    // gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * totalLocalPos;
-    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Pos, 1.0f);
+    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * totalLocalPos;
+    // gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Pos, 1.0f);
 
     v_Pos = vec3(u_ModelMatrix * vec4(a_Pos, 1.0));
     v_Normal = mat3(u_ModelMatrix) * a_Normal;

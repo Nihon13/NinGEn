@@ -65,6 +65,12 @@ int main()
         //     std::string s = "u_FinalBonesMatrices[" + std::to_string(i) + "]";
         //     shader.setUniformMat4f(s.c_str(), transforms[i]);
         // }
+
+        for (int i = 0; i < robotTestModel.getBonesNum(); i++)
+        {
+            std::string s = "u_FinalBonesMatrices[" + std::to_string(i) + "]";
+            shader.setUniformMat4f(s.c_str(), robotTestModel.getFinalBonesMatrices(i));
+        }
     
         displayBone = (int)glfwGetTime() % 6;
         

@@ -42,13 +42,16 @@ namespace ningen {
             extractMeshData(m_Scene->mMeshes[i]);
         }
 
-        readNodesHierarchy(m_Scene->mRootNode, -1);
+        readNodesHierarchy(m_Scene->mRootNode, -1, m_RootFinalTransformation);
+        m_FinalBonesMatrices.resize(m_Bones.size());
 
         for (unsigned int i = 0; i < m_NumMeshes; i++)
         {
             extractBoneWeights(m_Scene->mMeshes[i], m_Vertices[i]);
             m_Meshes.push_back(new Mesh(m_Vertices[i], m_Indices[i]));
         }
+
+        getBoneTransform();
 
         return true;
     }
@@ -134,9 +137,13 @@ namespace ningen {
         m_Indices.push_back(indices);
     }
 
-    void TempModel::readNodesHierarchy(const aiNode* node, int parentID)
+    void TempModel::readNodesHierarchy(const aiNode* node, int parentID, Mat4& parentTransformation)
     {
         std::string nodeName = node->mName.C_Str();
+
+        Mat4 nodeTransformation = AssimpToGLM(node->mTransformation);
+
+        Mat4 globalTransformation = parentTransformation * nodeTransformation;
 
         auto result = std::find(m_BonesNamesList.begin(), m_BonesNamesList.end(), nodeName);
         
@@ -152,9 +159,14 @@ namespace ningen {
             m_Bones.push_back(boneBuffer);
         }
 
+        if (m_Bones.size() == 1)
+        {
+            m_RootFinalTransformation = parentTransformation;
+        }
+
         for (int i = 0; i < node->mNumChildren; i++)
         {
-            readNodesHierarchy(node->mChildren[i], parentID);
+            readNodesHierarchy(node->mChildren[i], parentID, globalTransformation);
         }
     }
 
@@ -201,4 +213,23 @@ namespace ningen {
         return -1;
     }
 
+    void TempModel::getBoneTransform(void)
+    {
+        for (int i = 0; i < m_Bones.size(); i++)
+        {
+            if (m_Bones[i].parentBoneID == -1)
+            {
+                m_FinalBonesMatrices[i] = m_RootFinalTransformation * m_Bones[i].transformMatrix;
+            }
+            else
+            {
+                m_FinalBonesMatrices[i] = m_FinalBonesMatrices[m_Bones[i].parentBoneID] * m_Bones[i].transformMatrix;
+            }
+        }
+
+        for (int i = 0; i < m_Bones.size(); i++)
+        {
+            m_FinalBonesMatrices[i] = m_FinalBonesMatrices[i] * m_Bones[i].offsetMatrix;
+        }
+    }
 }

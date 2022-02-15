@@ -31,18 +31,23 @@ namespace ningen {
             std::vector<std::vector<unsigned int>> m_Indices;
             std::vector<std::string> m_BonesNamesList;
             std::vector<Bone> m_Bones;
+            Mat4 m_RootFinalTransformation = Mat4(1.0f);
+            std::vector<Mat4> m_FinalBonesMatrices;
             bool initAssimp(void);
             void extractMeshData(const aiMesh* mesh);
             void extractBonesNames(const aiMesh* mesh);
             void extractBoneWeights(const aiMesh* mesh, std::vector<Vertex>& vertices);
             void addBoneToList(const aiBone* bone);
-            void readNodesHierarchy(const aiNode* node, int parentID);
+            void readNodesHierarchy(const aiNode* node, int parentID, Mat4& parentTrasformation);
             int findBoneId(std::string name);
+            void getBoneTransform(void);
         public:
             TempModel(const char* path);
             ~TempModel(void);
             const Mesh& getMesh(unsigned int index) const { return *m_Meshes[index]; }
+            const Mat4& getFinalBonesMatrices(unsigned int index) const { return m_FinalBonesMatrices[index]; }
 
+            inline const unsigned int getBonesNum(void) const { return m_Bones.size(); }
             inline unsigned int getNumMeshes(void) const { return m_NumMeshes; }
             inline static Mat4 AssimpToGLM(const aiMatrix4x4 &matrix)
             {
