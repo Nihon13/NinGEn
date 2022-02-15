@@ -70,9 +70,9 @@ namespace ningen {
     {
         std::string boneName = bone->mName.C_Str();
 
-        int result = findBoneId(boneName);
+        auto result = std::find(m_BonesNamesList.begin(), m_BonesNamesList.end(), boneName);
 
-        if (result == -1)
+        if (result == m_BonesNamesList.end())
         {
             m_BonesNamesList.push_back(boneName);
         }
@@ -203,11 +203,12 @@ namespace ningen {
 
     int TempModel::findBoneId(std::string name)
     {
-        auto result = std::find(m_BonesNamesList.begin(), m_BonesNamesList.end(), name);
-
-        if (result != m_BonesNamesList.end())
+        for (int i = 0; i < m_Bones.size(); i++)
         {
-            return result - m_BonesNamesList.begin();
+            if (m_Bones[i].name == name)
+            {
+                return i;
+            }
         }
 
         return -1;
