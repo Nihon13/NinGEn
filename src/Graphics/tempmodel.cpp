@@ -38,12 +38,41 @@ namespace ningen {
         
         for (unsigned int i = 0; i < m_NumMeshes; i++)
         {
+            extractBonesNames(m_Scene->mMeshes[i]);
             extractMeshData(m_Scene->mMeshes[i]);
+        }
+
+        readNodesHierarchy(m_Scene->mRootNode, -1);
+
+        for (unsigned int i = 0; i < m_NumMeshes; i++)
+        {
             extractBoneWeights(m_Scene->mMeshes[i], m_Vertices[i]);
             m_Meshes.push_back(new Mesh(m_Vertices[i], m_Indices[i]));
         }
 
         return true;
+    }
+
+    void TempModel::extractBonesNames(const aiMesh* mesh)
+    {
+        unsigned int numBones = mesh->mNumBones;
+
+        for (unsigned int i = 0; i < numBones; i++)
+        {
+            addBoneToList(mesh->mBones[i]);
+        }
+    }
+
+    void TempModel::addBoneToList(const aiBone* bone)
+    {
+        std::string boneName = bone->mName.C_Str();
+
+        int result = findBoneId(boneName);
+
+        if (result == -1)
+        {
+            m_BonesNamesList.push_back(boneName);
+        }
     }
 
     void TempModel::extractMeshData(const aiMesh* mesh)
@@ -105,6 +134,30 @@ namespace ningen {
         m_Indices.push_back(indices);
     }
 
+    void TempModel::readNodesHierarchy(const aiNode* node, int parentID)
+    {
+        std::string nodeName = node->mName.C_Str();
+
+        auto result = std::find(m_BonesNamesList.begin(), m_BonesNamesList.end(), nodeName);
+        
+        if (result != m_BonesNamesList.end())
+        {
+            Bone boneBuffer;
+            boneBuffer.id = m_Bones.size();
+            boneBuffer.name = nodeName;
+            boneBuffer.offsetMatrix = Mat4(1.0f);
+            boneBuffer.transformMatrix = AssimpToGLM(node->mTransformation);
+            boneBuffer.parentBoneID = parentID;
+            parentID = m_Bones.size();
+            m_Bones.push_back(boneBuffer);
+        }
+
+        for (int i = 0; i < node->mNumChildren; i++)
+        {
+            readNodesHierarchy(node->mChildren[i], parentID);
+        }
+    }
+
     void TempModel::extractBoneWeights(const aiMesh* mesh, std::vector<Vertex>& vertices)
     {
         unsigned int numBones = mesh->mNumBones;
@@ -112,9 +165,11 @@ namespace ningen {
         for (unsigned int i = 0; i < numBones; i++)
         {
             aiBone* bone = mesh->mBones[i];
+            std::string boneName = bone->mName.C_Str();
             unsigned int numWeights = bone->mNumWeights;
-
-            addBoneToList(bone);
+            int index = findBoneId(boneName);
+            
+            m_Bones[index].offsetMatrix = AssimpToGLM(bone->mOffsetMatrix);
 
             if (numWeights > 0)
             {
@@ -124,7 +179,7 @@ namespace ningen {
                     {
                         if (vertices[bone->mWeights[j].mVertexId].boneIDs[boneInfluence] == -1)
                         {
-                            vertices[bone->mWeights[j].mVertexId].boneIDs[boneInfluence] = m_Bones.at(bone->mName.C_Str()).id;
+                            vertices[bone->mWeights[j].mVertexId].boneIDs[boneInfluence] = m_Bones[index].id;
                             vertices[bone->mWeights[j].mVertexId].weights[boneInfluence] = bone->mWeights[j].mWeight;
                             break;
                         }
@@ -134,25 +189,16 @@ namespace ningen {
         }
     }
 
-    void TempModel::addBoneToList(const aiBone* bone)
+    int TempModel::findBoneId(std::string name)
     {
-        std::string boneName = bone->mName.C_Str();
+        auto result = std::find(m_BonesNamesList.begin(), m_BonesNamesList.end(), name);
 
-        Bone boneBuffer;
-
-        if (m_Bones.find(boneName) == m_Bones.end())
+        if (result != m_BonesNamesList.end())
         {
-            boneBuffer.id = m_Bones.size();
-            boneBuffer.name = boneName;
-            // boneBuffer.offsetMatrix = 
-            // boneBuffer.transformMatrix = 
-            // boneBuffer.parentBoneID = 
-            LOG_TRACE(m_Bones.size(), boneName);
-            // matToString(bone->mOffsetMatrix);
-            // m_Bones[boneName].offsetMatrix = AssimpToGLM(bone->mOffsetMatrix);
-            // LOG_TRACE("Macierz: ", glm::to_string(m_Bones[boneName].offsetMatrix));
-            m_Bones.try_emplace(boneName, boneBuffer);
+            return result - m_BonesNamesList.begin();
         }
+
+        return -1;
     }
 
 }
