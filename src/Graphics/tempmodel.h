@@ -20,6 +20,40 @@ namespace ningen {
         int parentBoneID;
     };
 
+    struct KeyPos
+    {
+        float position[3];
+        double time;
+    };
+
+    struct KeyRot
+    {
+        float rotation[4];
+        double time;
+    };
+
+    struct KeyScale
+    {
+        float scale[3];
+        double time;
+    };
+
+    struct AnimNode
+    {
+        int id;
+        std::vector<KeyPos> positionsKeys;
+        std::vector<KeyRot> rotationsKeys;
+        std::vector<KeyScale> scalingsKeys;
+    };
+
+    struct Animation
+    {
+        std::string name;
+        double duration;
+        double ticksPerSecond;
+        std::vector<AnimNode> channels;
+    };
+
     class TempModel
     {
         private:
@@ -31,6 +65,7 @@ namespace ningen {
             std::vector<std::vector<unsigned int>> m_Indices;
             std::vector<std::string> m_BonesNamesList;
             std::vector<Bone> m_Bones;
+            std::vector<Animation> m_Animations;
             Mat4 m_RootFinalTransformation = Mat4(1.0f);
             std::vector<Mat4> m_FinalBonesMatrices;
             bool initAssimp(void);
@@ -41,6 +76,8 @@ namespace ningen {
             void readNodesHierarchy(const aiNode* node, int parentID, Mat4& parentTrasformation);
             int findBoneId(std::string name);
             void getBoneTransform(void);
+            void extractAnimInfo(const aiAnimation* anim);
+            int findAnimBone(int animID, int boneID) const;
         public:
             TempModel(const char* path);
             ~TempModel(void);

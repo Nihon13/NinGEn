@@ -9,7 +9,7 @@
 #include "Graphics/model.h"
 #include "Graphics/tempmodel.h"
 
-#include "Graphics/writer.h"
+// #include "Graphics/writer.h"
 
 int main()
 {
@@ -43,9 +43,10 @@ int main()
     Mat4 view_matrix = Mat4(1.0f);    
     Mat4 model_matrix = Mat4(1.0f);
 
-    view_matrix = glm::translate(view_matrix, Vec3(0.0f, 0.0f, -70.0f));
+    view_matrix = glm::translate(view_matrix, Vec3(0.0f, -10.0f, -50.0f));
+    // view_matrix = glm::translate(view_matrix, Vec3(0.0f, -20.0f, -130.0f));
     // view_matrix = glm::rotate(view_matrix, glm::radians(-90.0f), Vec3(1.0f, 0.0f, 0.0f));
-    // view_matrix = glm::rotate(view_matrix, glm::radians(10.0f), Vec3(0.0f, 1.0f, 0.0f));
+    view_matrix = glm::rotate(view_matrix, glm::radians(90.0f), Vec3(0.0f, 1.0f, 0.0f));
 
     shader.setUniformMat4f("u_ProjectionMatrix", projection_matrix);
     shader.setUniformMat4f("u_ViewMatrix", view_matrix);

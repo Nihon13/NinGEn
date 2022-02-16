@@ -51,6 +51,11 @@ namespace ningen {
             m_Meshes.push_back(new Mesh(m_Vertices[i], m_Indices[i]));
         }
 
+        for (int i = 0; i < m_Scene->mNumAnimations; i++)
+        {
+            extractAnimInfo(m_Scene->mAnimations[i]);
+        }
+
         getBoneTransform();
 
         return true;
@@ -218,13 +223,20 @@ namespace ningen {
     {
         for (int i = 0; i < m_Bones.size(); i++)
         {
+            Mat4 boneTransform = m_Bones[i].transformMatrix;
+            
+            if (findAnimBone(0, m_Bones[i].id) != -1) // TODO: na razie 0 oznacza tylko pierwsza animacje, w przyszlosci wstawic zmienna
+            {
+                boneTransform = Mat4(glm::rotate(m_Bones[i].transformMatrix, glm::radians(30.0f), Vec3(1.0f, 0.0f, 0.0f))); // TODO
+            }
+
             if (m_Bones[i].parentBoneID == -1)
             {
-                m_FinalBonesMatrices[i] = m_RootFinalTransformation * m_Bones[i].transformMatrix;
+                m_FinalBonesMatrices[i] = m_RootFinalTransformation * boneTransform;
             }
             else
             {
-                m_FinalBonesMatrices[i] = m_FinalBonesMatrices[m_Bones[i].parentBoneID] * m_Bones[i].transformMatrix;
+                m_FinalBonesMatrices[i] = m_FinalBonesMatrices[m_Bones[i].parentBoneID] * boneTransform;
             }
         }
 
@@ -232,5 +244,74 @@ namespace ningen {
         {
             m_FinalBonesMatrices[i] = m_FinalBonesMatrices[i] * m_Bones[i].offsetMatrix;
         }
+    }
+
+    void TempModel::extractAnimInfo(const aiAnimation* anim)
+    {
+        Animation animation;
+
+        animation.name = anim->mName.C_Str();
+        animation.duration = anim->mDuration;
+        animation.ticksPerSecond = anim->mTicksPerSecond;
+
+        for (int i = 0; i < anim->mNumChannels; i++)
+        {
+            aiNodeAnim* aiNode = anim->mChannels[i];
+            AnimNode animNode;
+            std::string name = aiNode->mNodeName.C_Str();
+
+            animNode.id = m_Bones[findBoneId(name)].id;
+
+            for (int j = 0; j < aiNode->mNumPositionKeys; j++)
+            {
+                KeyPos kp;
+                kp.position[0] = aiNode->mPositionKeys[j].mValue.x;
+                kp.position[1] = aiNode->mPositionKeys[j].mValue.y;
+                kp.position[2] = aiNode->mPositionKeys[j].mValue.z;
+                kp.time = aiNode->mPositionKeys[j].mTime;
+
+                animNode.positionsKeys.push_back(kp);
+            }
+
+            for (int j = 0; j < aiNode->mNumRotationKeys; j++)
+            {
+                KeyRot kr;
+                kr.rotation[0] = aiNode->mRotationKeys[j].mValue.w;
+                kr.rotation[1] = aiNode->mRotationKeys[j].mValue.x;
+                kr.rotation[2] = aiNode->mRotationKeys[j].mValue.y;
+                kr.rotation[3] = aiNode->mRotationKeys[j].mValue.z;
+                kr.time = aiNode->mRotationKeys[j].mTime;
+
+                animNode.rotationsKeys.push_back(kr);
+            }
+
+            for (int j = 0; j < aiNode->mNumRotationKeys; j++)
+            {
+                KeyScale ks;
+                ks.scale[0] = aiNode->mScalingKeys[j].mValue.x;
+                ks.scale[1] = aiNode->mScalingKeys[j].mValue.y;
+                ks.scale[2] = aiNode->mScalingKeys[j].mValue.z;
+                ks.time = aiNode->mScalingKeys[j].mTime;
+
+                animNode.scalingsKeys.push_back(ks);
+            }
+
+            animation.channels.push_back(animNode);
+        }
+
+        m_Animations.push_back(animation);
+    }
+
+    int TempModel::findAnimBone(int animID, int boneID) const
+    {
+        for (int i = 0; i < m_Animations[animID].channels.size(); i++)
+        {
+            if (m_Animations[animID].channels[i].id == boneID)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
