@@ -75,12 +75,12 @@ namespace ningen {
             void addBoneToList(const aiBone* bone);
             void readNodesHierarchy(const aiNode* node, int parentID, Mat4& parentTrasformation);
             int findBoneId(std::string name);
-            void getBoneTransform(void);
             void extractAnimInfo(const aiAnimation* anim);
             int findAnimBone(int animID, int boneID) const;
         public:
             TempModel(const char* path);
             ~TempModel(void);
+            void getBoneTransform(float timeInSec);
             const Mesh& getMesh(unsigned int index) const { return *m_Meshes[index]; }
             const Mat4& getFinalBonesMatrices(unsigned int index) const { return m_FinalBonesMatrices[index]; }
 

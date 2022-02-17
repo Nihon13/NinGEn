@@ -56,7 +56,7 @@ namespace ningen {
             extractAnimInfo(m_Scene->mAnimations[i]);
         }
 
-        getBoneTransform();
+        getBoneTransform(0.0f);
 
         return true;
     }
@@ -219,15 +219,33 @@ namespace ningen {
         return -1;
     }
 
-    void TempModel::getBoneTransform(void)
+    void TempModel::getBoneTransform(float timeInSec)
     {
+        int animationIndex = 0; // TODO: tymczasowo
+        float timeInTicks = timeInSec * (float)m_Animations[animationIndex].ticksPerSecond;
+        float animationTimeTicks = fmod(timeInTicks, (float)m_Animations[animationIndex].duration);
+
+        LOG_TRACE(animationTimeTicks);
+
         for (int i = 0; i < m_Bones.size(); i++)
         {
             Mat4 boneTransform = m_Bones[i].transformMatrix;
+
+            int nodeIndex = findAnimBone(animationIndex, m_Bones[i].id);
             
-            if (findAnimBone(0, m_Bones[i].id) != -1) // TODO: na razie 0 oznacza tylko pierwsza animacje, w przyszlosci wstawic zmienna
+            if (nodeIndex != -1)
             {
-                boneTransform = Mat4(glm::rotate(m_Bones[i].transformMatrix, glm::radians(30.0f), Vec3(1.0f, 0.0f, 0.0f))); // TODO
+                // boneTransform = Mat4(glm::rotate(m_Bones[i].transformMatrix, glm::radians(30.0f), Vec3(1.0f, 0.0f, 0.0f))); // TODO
+                AnimNode* animNode = &(m_Animations[animationIndex].channels[nodeIndex]); // TODO: channels[?] - zly index
+                Mat4 translate = Mat4(1.0f);
+                LOG_TRACE(animNode->positionsKeys.size());
+                // float a = animNode->positionsKeys[(int)animationTimeTicks].position[0];
+                translate = glm::translate(translate, Vec3(animNode->positionsKeys[(int)animationTimeTicks].position[0], animNode->positionsKeys[(int)animationTimeTicks].position[1], animNode->positionsKeys[(int)animationTimeTicks].position[2]));
+                glm::quat Quat = glm::quat(animNode->rotationsKeys[(int)animationTimeTicks].rotation[0], animNode->rotationsKeys[(int)animationTimeTicks].rotation[1], animNode->rotationsKeys[(int)animationTimeTicks].rotation[2], animNode->rotationsKeys[(int)animationTimeTicks].rotation[3]);
+                Mat4 rotate = toMat4(Quat);
+                Mat4 scale = Mat4(1.0f);
+                boneTransform = translate * rotate * scale;
+                // boneTransform = animNode.positionKeys[(int)animationTimeTicks] * animNode.rotationKeys[(int)animationTimeTicks]
             }
 
             if (m_Bones[i].parentBoneID == -1)

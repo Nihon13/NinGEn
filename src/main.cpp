@@ -52,6 +52,7 @@ int main()
     shader.setUniformMat4f("u_ViewMatrix", view_matrix);
 
     int displayBone = 0;
+    float timer = 0.0f;
 
     while (!window.windowShouldClose())
     {
@@ -80,7 +81,11 @@ int main()
             displayBone = 0;
         }
 
-        shader.setUniform1i("gDisplayBoneIndex", displayBone);
+        timer = fmod(glfwGetTime(), 4.9f);
+
+        robotTestModel.getBoneTransform(timer);
+
+        // shader.setUniform1i("gDisplayBoneIndex", displayBone);
 
         shader.setUniformMat4f("u_ModelMatrix", model_matrix);
 
