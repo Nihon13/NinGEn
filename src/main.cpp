@@ -33,6 +33,7 @@ int main()
     // Model jointDebug("../../NinGEnModelLoader/res/TestV6/JointDebug2.nhmf");
 
     TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/Robot.fbx");
+    TempModel robotTestModel1("../../NinGEnModelLoader/res/Kontynuacja/Robot1.fbx");
     // TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/boblampclean.md5mesh");
 
     shader.start();
@@ -52,7 +53,7 @@ int main()
     shader.setUniformMat4f("u_ViewMatrix", view_matrix);
 
     int displayBone = 0;
-    float timer = 0.0f;
+    float timer = glfwGetTime();
 
     while (!window.windowShouldClose())
     {
@@ -68,11 +69,6 @@ int main()
         //     shader.setUniformMat4f(s.c_str(), transforms[i]);
         // }
 
-        for (int i = 0; i < robotTestModel.getBonesNum(); i++)
-        {
-            std::string s = "u_FinalBonesMatrices[" + std::to_string(i) + "]";
-            shader.setUniformMat4f(s.c_str(), robotTestModel.getFinalBonesMatrices(i));
-        }
     
         displayBone = (int)glfwGetTime() % 6;
         
@@ -81,10 +77,15 @@ int main()
             displayBone = 0;
         }
 
-        timer = fmod(glfwGetTime(), 4.9f);
+        timer = glfwGetTime() * 0.4f;
 
         robotTestModel.getBoneTransform(timer);
 
+        for (int i = 0; i < robotTestModel.getBonesNum(); i++)
+        {
+            std::string s = "u_FinalBonesMatrices[" + std::to_string(i) + "]";
+            shader.setUniformMat4f(s.c_str(), robotTestModel.getFinalBonesMatrices(i));
+        }
         // shader.setUniform1i("gDisplayBoneIndex", displayBone);
 
         shader.setUniformMat4f("u_ModelMatrix", model_matrix);
@@ -92,6 +93,24 @@ int main()
         for (unsigned int i = 0; i < robotTestModel.getNumMeshes(); i++)
         {
             robotTestModel.getMesh(i).draw();
+        }
+
+        ////////////////////////////
+        robotTestModel1.getBoneTransform(timer);
+
+        for (int i = 0; i < robotTestModel.getBonesNum(); i++)
+        {
+            std::string s = "u_FinalBonesMatrices[" + std::to_string(i) + "]";
+            shader.setUniformMat4f(s.c_str(), robotTestModel1.getFinalBonesMatrices(i));
+        }
+
+        model_matrix = glm::translate(model_matrix, Vec3(0.0f, 0.0f, 20.0f));
+
+        shader.setUniformMat4f("u_ModelMatrix", model_matrix);
+
+        for (unsigned int i = 0; i < robotTestModel1.getNumMeshes(); i++)
+        {
+            robotTestModel1.getMesh(i).draw();
         }
 
         window.updateWindow();

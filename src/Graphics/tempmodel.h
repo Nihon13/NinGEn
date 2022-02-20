@@ -77,6 +77,13 @@ namespace ningen {
             int findBoneId(std::string name);
             void extractAnimInfo(const aiAnimation* anim);
             int findAnimBone(int animID, int boneID) const;
+            Mat4 interpolatePosition(float animationTime, AnimNode* animNode);
+            Mat4 interpolateRotation(float animationTime, AnimNode* animNode);
+            Mat4 interpolateScaling(float animationTime, AnimNode* animNode);
+            int getPositionIndex(float animationTime, AnimNode* animNode);
+            int getRotationIndex(float animationTime, AnimNode* animNode);
+            int getScaleIndex(float animationTime, AnimNode* animNode);
+            float getScaleFactor(float previousTime, float nextTime, float animationTime);
         public:
             TempModel(const char* path);
             ~TempModel(void);

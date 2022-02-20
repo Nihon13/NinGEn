@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2021, assimp team
+Copyright (c) 2006-2022, assimp team
 
 All rights reserved.
 
@@ -262,7 +262,7 @@ AI_FORCE_INLINE unsigned int tokenize(const string_type &str, std::vector<string
 inline std::string ai_stdStrToLower(const std::string &str) {
     std::string out(str);
     for (size_t i = 0; i < str.size(); ++i) {
-        out[i] = (char) tolower(out[i]);
+        out[i] = (char) tolower((unsigned char)out[i]);
     }
     return out;
 }

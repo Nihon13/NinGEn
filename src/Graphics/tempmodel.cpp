@@ -56,8 +56,6 @@ namespace ningen {
             extractAnimInfo(m_Scene->mAnimations[i]);
         }
 
-        getBoneTransform(0.0f);
-
         return true;
     }
 
@@ -225,8 +223,6 @@ namespace ningen {
         float timeInTicks = timeInSec * (float)m_Animations[animationIndex].ticksPerSecond;
         float animationTimeTicks = fmod(timeInTicks, (float)m_Animations[animationIndex].duration);
 
-        LOG_TRACE(animationTimeTicks);
-
         for (int i = 0; i < m_Bones.size(); i++)
         {
             Mat4 boneTransform = m_Bones[i].transformMatrix;
@@ -235,16 +231,18 @@ namespace ningen {
             
             if (nodeIndex != -1)
             {
-                // boneTransform = Mat4(glm::rotate(m_Bones[i].transformMatrix, glm::radians(30.0f), Vec3(1.0f, 0.0f, 0.0f))); // TODO
-                AnimNode* animNode = &(m_Animations[animationIndex].channels[nodeIndex]); // TODO: channels[?] - zly index
+                AnimNode* animNode = &(m_Animations[animationIndex].channels[nodeIndex]);
                 Mat4 translate = Mat4(1.0f);
-                LOG_TRACE(animNode->positionsKeys.size());
-                // float a = animNode->positionsKeys[(int)animationTimeTicks].position[0];
+                // LOG_TRACE(animNode->positionsKeys.size());
                 translate = glm::translate(translate, Vec3(animNode->positionsKeys[(int)animationTimeTicks].position[0], animNode->positionsKeys[(int)animationTimeTicks].position[1], animNode->positionsKeys[(int)animationTimeTicks].position[2]));
+                translate = interpolatePosition(animationTimeTicks, animNode);
                 glm::quat Quat = glm::quat(animNode->rotationsKeys[(int)animationTimeTicks].rotation[0], animNode->rotationsKeys[(int)animationTimeTicks].rotation[1], animNode->rotationsKeys[(int)animationTimeTicks].rotation[2], animNode->rotationsKeys[(int)animationTimeTicks].rotation[3]);
                 Mat4 rotate = toMat4(Quat);
+                rotate = interpolateRotation(animationTimeTicks, animNode);
                 Mat4 scale = Mat4(1.0f);
+                scale = interpolateScaling(animationTimeTicks, animNode);
                 boneTransform = translate * rotate * scale;
+                // LOG_TRACE(animNode->positionsKeys[(int)animationTimeTicks].time, " | ", timeInSec);
                 // boneTransform = animNode.positionKeys[(int)animationTimeTicks] * animNode.rotationKeys[(int)animationTimeTicks]
             }
 
@@ -331,5 +329,107 @@ namespace ningen {
         }
 
         return -1;
+    }
+
+    float TempModel::getScaleFactor(float previousTime, float nextTime, float animationTime)
+    {
+        float midWayLength = animationTime - previousTime;
+        float framesDiff = nextTime - previousTime;
+
+        float scaleFactor = midWayLength / framesDiff;
+        return scaleFactor;
+    }
+
+    Mat4 TempModel::interpolatePosition(float animationTime, AnimNode* animNode)
+    {
+        if (animNode->positionsKeys.size() == 1)
+        {
+            // return glm::translate(Mat4(1.0f), animNode->positionsKeys[0].position); // TODO
+            return glm::translate(Mat4(1.0f), Vec3(animNode->positionsKeys[0].position[0], animNode->positionsKeys[0].position[1], animNode->positionsKeys[0].position[2]));
+        }
+
+        int p0 = getPositionIndex(animationTime, animNode);
+        int p1 = p0 + 1;
+        float scaleFactor = getScaleFactor(animNode->positionsKeys[p0].time, animNode->positionsKeys[p1].time, animationTime);
+        Vec3 pos0 = Vec3(animNode->positionsKeys[p0].position[0], animNode->positionsKeys[p0].position[1], animNode->positionsKeys[p0].position[2]);
+        Vec3 pos1 = Vec3(animNode->positionsKeys[p1].position[0], animNode->positionsKeys[p1].position[1], animNode->positionsKeys[p1].position[2]);
+        Vec3 finalPos = glm::mix(pos0, pos1, scaleFactor);
+
+        return glm::translate(Mat4(1.0f), finalPos);
+    }
+
+    Mat4 TempModel::interpolateRotation(float animationTime, AnimNode* animNode)
+    {
+        if (animNode->rotationsKeys.size() == 1)
+        {
+            auto rotation = glm::normalize(Quaternion(animNode->rotationsKeys[0].rotation[0], animNode->rotationsKeys[0].rotation[1], animNode->rotationsKeys[0].rotation[2], animNode->rotationsKeys[0].rotation[3]));
+            return glm::toMat4(rotation);
+        }
+        
+        int p0 = getRotationIndex(animationTime, animNode);
+        int p1 = p0 + 1;
+        float scaleFactor = getScaleFactor(animNode->rotationsKeys[p0].time, animNode->rotationsKeys[p1].time, animationTime);
+        Quaternion rot0 = Quaternion(Quaternion(animNode->rotationsKeys[p0].rotation[0], animNode->rotationsKeys[p0].rotation[1], animNode->rotationsKeys[p0].rotation[2], animNode->rotationsKeys[p0].rotation[3]));
+        Quaternion rot1 = Quaternion(Quaternion(animNode->rotationsKeys[p1].rotation[0], animNode->rotationsKeys[p1].rotation[1], animNode->rotationsKeys[p1].rotation[2], animNode->rotationsKeys[p1].rotation[3]));
+        Quaternion finalRot = glm::slerp(rot0, rot1, scaleFactor);
+        finalRot = glm::normalize(finalRot);
+        
+        return glm::toMat4(finalRot);
+    }
+
+    Mat4 TempModel::interpolateScaling(float animationTime, AnimNode* animNode)
+    {
+        if (animNode->scalingsKeys.size() == 1)
+        {
+            return glm::scale(Mat4(1.0f), Vec3(animNode->scalingsKeys[0].scale[0], animNode->scalingsKeys[0].scale[1], animNode->scalingsKeys[0].scale[2]));
+        }
+
+        int p0 = getScaleIndex(animationTime, animNode);
+        int p1 = p0 + 1;
+        float scaleFactor = getScaleFactor(animNode->scalingsKeys[p0].time, animNode->scalingsKeys[p1].time, animationTime);
+        Vec3 scal0 = Vec3(animNode->scalingsKeys[p0].scale[0], animNode->scalingsKeys[p0].scale[1], animNode->scalingsKeys[p0].scale[2]);
+        Vec3 scal1 = Vec3(animNode->scalingsKeys[p1].scale[0], animNode->scalingsKeys[p1].scale[1], animNode->scalingsKeys[p1].scale[2]);
+        Vec3 finalScale = glm::mix(scal0, scal1, scaleFactor);
+
+        return glm::scale(Mat4(1.0f), finalScale);
+    }
+
+    int TempModel::getPositionIndex(float animationTime, AnimNode* animNode)
+    {
+        int numPos = animNode->positionsKeys.size();
+        for (int i = 0; i < numPos-1; i++)
+        {
+            if (animationTime < (float)animNode->positionsKeys[i+1].time)
+            {
+                return i;
+            }
+        }
+        assert(0);
+    }
+
+    int TempModel::getRotationIndex(float animationTime, AnimNode* animNode)
+    {
+        int numRot = animNode->rotationsKeys.size();
+        for (int i = 0; i < numRot-1; i++)
+        {
+            if (animationTime < (float)animNode->rotationsKeys[i+1].time)
+            {
+                return i;
+            }
+        }
+        assert(0);
+    }
+
+    int TempModel::getScaleIndex(float animationTime, AnimNode* animNode)
+    {
+        int numScal = animNode->scalingsKeys.size();
+        for (int i = 0; i < numScal-1; i++)
+        {
+            if (animationTime < (float)animNode->scalingsKeys[i+1].time)
+            {
+                return i;
+            }
+        }
+        assert(0);
     }
 }
