@@ -7,9 +7,6 @@
 #include "Graphics/vao.h"
 #include "Graphics/texture.h"
 #include "Graphics/model.h"
-#include "Graphics/tempmodel.h"
-
-// #include "Graphics/writer.h"
 
 int main()
 {
@@ -25,16 +22,12 @@ int main()
 
     Texture tex1("../../NinGEnModelLoader/res/Sciana.png");
 
-    // writeToFile("../../NinGEnModelLoader/res/TestV6/Robot.fbx");
-    // writeToFile("../../NinGEnModelLoader/res/TestV6/Robot.dae");
-
     // Model robot1("../../NinGEnModelLoader/res/TestV6/Robot.nhmf");
     // Model testBox("../../NinGEnModelLoader/res/TestV6/RigTestBox.nhmf");
     // Model jointDebug("../../NinGEnModelLoader/res/TestV6/JointDebug2.nhmf");
 
-    TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/Robot.fbx");
-    TempModel robotTestModel1("../../NinGEnModelLoader/res/Kontynuacja/Robot1.fbx");
-    // TempModel robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/boblampclean.md5mesh");
+    Model robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/Robot.nhmf");
+    Model robotTestModel1("../../NinGEnModelLoader/res/Kontynuacja/Robot1.nhmf");
 
     shader.start();
     tex1.bind(0);
@@ -77,9 +70,9 @@ int main()
             displayBone = 0;
         }
 
-        timer = glfwGetTime() * 0.4f;
+        timer = glfwGetTime();
 
-        robotTestModel.getBoneTransform(timer);
+        robotTestModel.calculateBoneTransform(timer);
 
         for (int i = 0; i < robotTestModel.getBonesNum(); i++)
         {
@@ -96,7 +89,7 @@ int main()
         }
 
         ////////////////////////////
-        robotTestModel1.getBoneTransform(timer);
+        robotTestModel1.calculateBoneTransform(timer);
 
         for (int i = 0; i < robotTestModel.getBonesNum(); i++)
         {

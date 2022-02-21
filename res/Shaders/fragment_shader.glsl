@@ -46,7 +46,7 @@ void main()
               FragColor = vec4(1.0, 1.0, 0.0, 0.0) * v_Weights[i];
             }
 
-            found = true;
+            // found = true;
             break;
         }
     }
