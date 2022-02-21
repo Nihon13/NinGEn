@@ -22,8 +22,12 @@ int main()
 
     Texture tex1("../../NinGEnModelLoader/res/Sciana.png");
 
-    Model robot1("../../NinGEnModelLoader/res/Robot.nhmf");
-    Model interior("../../NinGEnModelLoader/res/Interior.nhmf");
+    // Model robot1("../../NinGEnModelLoader/res/TestV6/Robot.nhmf");
+    // Model testBox("../../NinGEnModelLoader/res/TestV6/RigTestBox.nhmf");
+    // Model jointDebug("../../NinGEnModelLoader/res/TestV6/JointDebug2.nhmf");
+
+    Model robotTestModel("../../NinGEnModelLoader/res/Kontynuacja/Robot.nhmf");
+    Model robotTestModel1("../../NinGEnModelLoader/res/Kontynuacja/Robot1.nhmf");
 
     shader.start();
     tex1.bind(0);
@@ -33,37 +37,57 @@ int main()
     Mat4 view_matrix = Mat4(1.0f);    
     Mat4 model_matrix = Mat4(1.0f);
 
-    view_matrix = glm::translate(view_matrix, Vec3(0.0f, -4.0f, -120.0f));
-    view_matrix = glm::rotate(view_matrix, glm::radians(30.0f), Vec3(1.0f, 0.0f, 0.0f));
-    view_matrix = glm::rotate(view_matrix, glm::radians(190.0f), Vec3(0.0f, 1.0f, 0.0f));
-    view_matrix = glm::scale(view_matrix, Vec3(0.045f, 0.045f, 0.045f));
+    view_matrix = glm::translate(view_matrix, Vec3(0.0f, -10.0f, -50.0f));
+    // view_matrix = glm::translate(view_matrix, Vec3(0.0f, -20.0f, -130.0f));
+    // view_matrix = glm::rotate(view_matrix, glm::radians(-90.0f), Vec3(1.0f, 0.0f, 0.0f));
+    view_matrix = glm::rotate(view_matrix, glm::radians(90.0f), Vec3(0.0f, 1.0f, 0.0f));
 
     shader.setUniformMat4f("u_ProjectionMatrix", projection_matrix);
     shader.setUniformMat4f("u_ViewMatrix", view_matrix);
+
+    float timer = glfwGetTime();
 
     while (!window.windowShouldClose())
     {
         window.clearWindow();
 
+        shader.start();
         model_matrix = Mat4(1.0f);
-        shader.setUniformMat4f("u_ModelMatrix", model_matrix);
-        interior.getMesh(0).draw();
-        interior.getMesh(1).draw();
-        interior.getMesh(2).draw();
-        interior.getMesh(3).draw();
-        interior.getMesh(4).draw();
-        interior.getMesh(5).draw();
-        interior.getMesh(6).draw();
 
-        model_matrix = glm::translate(model_matrix, Vec3(0.0f, 0.0f, -500.0f));
-        model_matrix = glm::scale(model_matrix, Vec3(0.25f, 0.25f, 0.25f));
+        timer = glfwGetTime();
+
+        robotTestModel.calculateBoneTransform(timer);
+
+        for (int i = 0; i < robotTestModel.getBonesNum(); i++)
+        {
+            std::string s = "u_FinalBonesMatrices[" + std::to_string(i) + "]";
+            shader.setUniformMat4f(s.c_str(), robotTestModel.getFinalBonesMatrices(i));
+        }
+
         shader.setUniformMat4f("u_ModelMatrix", model_matrix);
-        robot1.getMesh(0).draw();
-        robot1.getMesh(1).draw();
-        robot1.getMesh(2).draw();
-        robot1.getMesh(3).draw();
-        robot1.getMesh(4).draw();
-        robot1.getMesh(5).draw();
+
+        for (unsigned int i = 0; i < robotTestModel.getNumMeshes(); i++)
+        {
+            robotTestModel.getMesh(i).draw();
+        }
+
+        ////////////////////////////
+        robotTestModel1.calculateBoneTransform(timer);
+
+        for (int i = 0; i < robotTestModel.getBonesNum(); i++)
+        {
+            std::string s = "u_FinalBonesMatrices[" + std::to_string(i) + "]";
+            shader.setUniformMat4f(s.c_str(), robotTestModel1.getFinalBonesMatrices(i));
+        }
+
+        model_matrix = glm::translate(model_matrix, Vec3(0.0f, 0.0f, 20.0f));
+
+        shader.setUniformMat4f("u_ModelMatrix", model_matrix);
+
+        for (unsigned int i = 0; i < robotTestModel1.getNumMeshes(); i++)
+        {
+            robotTestModel1.getMesh(i).draw();
+        }
 
         window.updateWindow();
     }

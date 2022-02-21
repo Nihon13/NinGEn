@@ -3,9 +3,6 @@
 
 #include "Math/math.h"
 #include "Graphics/texture.h"
-#include "Graphics/vao.h"
-#include "Graphics/vbo.h"
-#include "Graphics/ibo.h"
 #include <vector>
 
 #define MAX_BONE_INFLUENCE 3
