@@ -12,22 +12,45 @@ namespace ningen {
         return KeyboardInput::m_Instance;
     }
 
-    void KeyboardInput::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) const
+    void KeyboardInput::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        if (action != GLFW_RELEASE && key == GLFW_KEY_ESCAPE) // TODO: To change
+        if (action == GLFW_RELEASE)
         {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+            if (m_ReleaseCallbacks[key] != NULL)
+            {
+                m_ReleaseCallbacks[key]();
+            }
         }
-
-        if (action == GLFW_PRESS && key == GLFW_KEY_F1)
+        else if (action == GLFW_PRESS)
         {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            if (m_PressCallbacks[key] != NULL)
+            {
+                m_PressCallbacks[key]();
+            }
         }
-
-        if (action == GLFW_RELEASE && key == GLFW_KEY_F1)
+        else // GLFW_REPEAT
         {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            if (m_RepeatCallbacks[key] != NULL)
+            {
+                m_RepeatCallbacks[key]();
+            }
         }
     }
 
+    void KeyboardInput::addBinding(int key, int action, const Callback& callback)
+    {
+        if (action == GLFW_RELEASE)
+        {
+            m_ReleaseCallbacks[key] = callback;
+        }
+        else if (action == GLFW_PRESS)
+        {
+            m_PressCallbacks[key] = callback;
+        }
+        else // GLFW_REPEAT
+        {
+            m_RepeatCallbacks[key] = callback;
+        }
+    }
+    
 }

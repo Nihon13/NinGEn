@@ -69,6 +69,8 @@ namespace ningen {
 		
         glViewport(0, 0, m_Width, m_Height);
 
+        KeyboardInput::getInstance().addBinding(GLFW_KEY_ESCAPE, GLFW_PRESS, [&](){glfwSetWindowShouldClose(m_Window, GLFW_TRUE);});
+
         return true;
     }
 

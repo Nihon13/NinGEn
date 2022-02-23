@@ -47,6 +47,9 @@ int main()
 
     float timer = glfwGetTime();
 
+    KeyboardInput::getInstance().addBinding(GLFW_KEY_F1, GLFW_PRESS, [](){glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);});
+    KeyboardInput::getInstance().addBinding(GLFW_KEY_F1, GLFW_RELEASE, [](){glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);});
+
     while (!window.windowShouldClose())
     {
         window.clearWindow();
