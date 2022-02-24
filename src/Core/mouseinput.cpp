@@ -20,7 +20,10 @@ namespace ningen {
 
     void MouseInput::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) const
     {
-
+        if (m_ScrollCallback != NULL)
+        {
+            m_ScrollCallback(yoffset);
+        }
     }
 
     void MouseInput::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) const
