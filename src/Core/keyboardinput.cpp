@@ -21,18 +21,11 @@ namespace ningen {
                 m_ReleaseCallbacks[key]();
             }
         }
-        else if (action == GLFW_PRESS)
+        else
         {
             if (m_PressCallbacks[key] != NULL)
             {
                 m_PressCallbacks[key]();
-            }
-        }
-        else // GLFW_REPEAT
-        {
-            if (m_RepeatCallbacks[key] != NULL)
-            {
-                m_RepeatCallbacks[key]();
             }
         }
     }
@@ -43,13 +36,9 @@ namespace ningen {
         {
             m_ReleaseCallbacks[key] = callback;
         }
-        else if (action == GLFW_PRESS)
+        else
         {
             m_PressCallbacks[key] = callback;
-        }
-        else // GLFW_REPEAT
-        {
-            m_RepeatCallbacks[key] = callback;
         }
     }
     

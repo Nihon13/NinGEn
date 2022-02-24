@@ -16,7 +16,6 @@ namespace ningen {
             static KeyboardInput m_Instance;
             std::map<int, Callback> m_ReleaseCallbacks;
             std::map<int, Callback> m_PressCallbacks;
-            std::map<int, Callback> m_RepeatCallbacks;
             KeyboardInput(void);
             ~KeyboardInput(void);
             KeyboardInput(KeyboardInput&) = delete;
