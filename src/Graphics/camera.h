@@ -28,17 +28,20 @@ namespace ningen {
             float m_Roll = 0.0f;
             
             const float m_ZoomSpeed = 1.0f;
-            const float m_HorizontalSpeed = 0.15f;
+            const float m_Sensitivity = 0.15f;
 
             Mat4 m_ProjectionMatrix = Mat4(1.0f);
             Mat4 m_ViewMatrix = Mat4(1.0f);
             Mat4 m_ViewProjectionMatrix = Mat4(1.0f);
+
+            void calculateCameraPosition(void);
+            void changeFoV(float offset);
+            void changeAngleAroundTarget(float angle);
+            void changePitch(float pitch);
         public:
             Camera(void) = delete;
             Camera(float fov, float aspect, float near, float far);
 
-            void changeFoV(float offset);
-            void changeAngleAroundTarget(float angle);
             void recalculateProjectionMatrix(void);
             void recalculateViewMatrix(void);
             inline const Vec3& getCameraPosition() const { return m_CameraPosition; }

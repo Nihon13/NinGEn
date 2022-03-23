@@ -25,7 +25,17 @@ namespace ningen {
 
         if (m_IsRightButtonPressed)
         {
-            m_RightButtonCallback(offsetX);
+            if (m_Instance.m_RightButtonCallback.find(m_KeyModifier) != m_Instance.m_RightButtonCallback.end())
+            {
+                if (m_Instance.m_RightButtonCallback[m_KeyModifier].offset == MouseOffsets::offset_X)
+                {
+                    m_Instance.m_RightButtonCallback[m_KeyModifier].func(offsetX);
+                }
+                else
+                {
+                    m_Instance.m_RightButtonCallback[m_KeyModifier].func(offsetY);
+                }
+            }
         }
     }
 
@@ -39,6 +49,8 @@ namespace ningen {
 
     void MouseInput::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) const
     {
+        m_Instance.m_KeyModifier = mods;
+
         if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
