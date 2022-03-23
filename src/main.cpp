@@ -36,9 +36,11 @@ int main()
 
     view_matrix = glm::translate(view_matrix, Vec3(0.0f, -10.0f, -50.0f)) * glm::rotate(view_matrix, glm::radians(90.0f), Vec3(0.0f, 1.0f, 0.0f));
 
+    camera.recalculateViewMatrix();
+
     shader.setUniformMat4f("u_ProjectionMatrix", camera.getProjectionMatrix());
-    // shader.setUniformMat4f("u_ViewMatrix", camera.getViewMatrix());
-    shader.setUniformMat4f("u_ViewMatrix", view_matrix);
+    shader.setUniformMat4f("u_ViewMatrix", camera.getViewMatrix());
+    // shader.setUniformMat4f("u_ViewMatrix", view_matrix);
 
     float timer = glfwGetTime();
 
@@ -51,6 +53,7 @@ int main()
 
         shader.start();
         shader.setUniformMat4f("u_ProjectionMatrix", camera.getProjectionMatrix());
+        shader.setUniformMat4f("u_ViewMatrix", camera.getViewMatrix());
 
         model_matrix = Mat4(1.0f);
 
